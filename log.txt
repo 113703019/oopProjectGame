@@ -1,3 +1,6 @@
 Author: Zi-Yi Chen
 
-2025/03/12 Files created
+2025/03/12 Files created.
+2025/03/14 Changed "Hunger.cpp" to "Emotion.cpp".
+           MainGame.cpp - Made the basic UI.
+           Work.cpp - Made the "Work" class and the basic work system.
