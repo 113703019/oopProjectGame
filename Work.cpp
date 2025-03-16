@@ -14,9 +14,9 @@ Work::Work(string &name,int moral,int money)
 	:_name(name), _moral(moral), _money(money){}
 
 void Work::goToWork(Work work){
-	moral += work._moral;
-	money += work._money;
-	emotion -= 15;
+	getStatus().moral += work._moral;
+	getStatus().money += work._money;
+	getStatus().emotion -= 15;
 }
 
 Work::~Work(){

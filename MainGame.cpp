@@ -25,17 +25,18 @@
 #include <iostream>
 #include "Status.h"
 
-int month = 1;
+Kid YourKid;
 
-void Round(){
+void Round(int month){
 
-	cout << "\"Hello! What should I do this month?\"" << endl << endl; // Temporary script
-	cout << month << money << "                        " << emotion << moral << endl; // Status
+	cout << YourKid.getStatus().name << ": \"Hello! What should I do this month?\"" << endl << endl; // Temporary script
+	cout << month+1 << YourKid.getStatus().money << "                        " << YourKid.getStatus().emotion << YourKid.getStatus().moral << endl; // Status
 	cout << "(Q) Talk | (W) Plan | (E) Inventory | (R) Shop" << endl; // UI instructions
 
 } // Round
 
 int main(){
-	
+	for(int round=0;round<12;round++)
+		Round(round);
 	return 0;
 }
