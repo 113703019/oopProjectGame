@@ -7,3 +7,4 @@ Author: Zi-Yi Chen
 2025/03/15 Work.cpp - Moved the "Work" class to "Work.h".
                       Realigned the functions.
                       Made the constructors and destructors according to oop04.
+2025/03/16 Commit everything to Github repo.
