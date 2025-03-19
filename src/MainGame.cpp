@@ -29,9 +29,9 @@ Kid YourKid;
 
 void Round(int month){
 
-	cout << YourKid.getStatus().name << ": \"Hello! What should I do this month?\"" << endl << endl; // Temporary script
-	cout << month+1 << YourKid.getStatus().money << "                        " << YourKid.getStatus().emotion << YourKid.getStatus().moral << endl; // Status
-	cout << "(Q) Talk | (W) Plan | (E) Inventory | (R) Shop" << endl; // UI instructions
+	std::cout << YourKid.getStatus().name << ": \"Hello! What should I do this month?\"" << std::endl << std::endl; // Temporary script
+	std::cout << month+1 << YourKid.getStatus().money << "                        " << YourKid.getStatus().emotion << YourKid.getStatus().moral << std::endl; // Status
+	std::cout << "(Q) Talk | (W) Plan | (E) Inventory | (R) Shop" << std::endl; // UI instructions
 
 } // Round
 

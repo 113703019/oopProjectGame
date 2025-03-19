@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-class Kid(){
+class Kid{
 
 	private:
 		struct Status{
@@ -19,6 +19,6 @@ class Kid(){
 		Kid();
 		Kid(string name);
 		Status getStatus();
-}
+};
 
 #endif

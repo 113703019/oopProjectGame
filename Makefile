@@ -7,7 +7,7 @@
 
 # the name of this package. 
 # The library and tar file, if any, will be named after it.
-PACKAGE  = Card
+PACKAGE  = Game
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify

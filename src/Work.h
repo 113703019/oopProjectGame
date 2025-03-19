@@ -21,9 +21,9 @@ class Work{
 vector<Work> workVec;
 
 // Add new works here
-// workVec.push(_name,_moral,_money);
-workVec.push(); // Default: Rest
-workVec.push("Clerk",10,100);
-workVec.push("Thief",10,-200);
+// workVec.push_back(_name,_moral,_money);
+workVec.push_back(); // Default: Rest
+workVec.push_back("Clerk",10,100);
+workVec.push_back("Thief",10,-200);
 
 #endif
