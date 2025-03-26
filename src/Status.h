@@ -3,12 +3,15 @@
 
 #include <iostream>
 #include <vector>
+using namespace std;
+
+string month = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
 
 class Kid{
 
 	private:
 		struct Status{
-			std::string name;
+			string name;
 			int money;
 			int emotion;
 			int moral;
