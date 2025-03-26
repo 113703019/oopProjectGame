@@ -25,3 +25,12 @@ Item& Item::operator = Item(const Item& ogItem){
 ItemStruct Item::getInfo(){
 	return _item;
 }
+
+void Item::buyItem(int id)
+   	// Technically, I could just pass an item...
+	// Though, I want to implement copying somewhere somehow.
+	if(find(shopVec.begin(),shopVec.end(),getInfo().itemID)==shopVec.end())
+		cout << "No such item in shop!" << endl;
+	else
+		inventoryVec.push_back(shopVec[id]);
+}

@@ -24,7 +24,7 @@ class Item{
 		~Item();
 
 		ItemStruct getInfo();
-		void buyItem(ItemStruct item);
+		void buyItem(int id);
 };
 
 vector<Item> inventoryVec;
