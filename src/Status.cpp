@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Status.h"
+#include "Item.h"
 
 // _status(name,money,emotion,moral)
 
@@ -12,4 +13,13 @@ Kid::Kid(string name)
 
 Status Kid::getStatus(){
 	return _status;
+}
+
+void setName(string name){
+	_status.name = name;
+}
+
+void Kid::useItem(Item targetItem){
+	status._emotion += targetItem.getInfo()._emotion;
+	inventoryVec.pop(targeItem.getInfo()._itemID);
 }

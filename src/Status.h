@@ -21,6 +21,7 @@ class Kid{
 	public:
 		Kid();
 		Kid(string name);
+		void setName(string name);
 		Status getStatus();
 };
 
