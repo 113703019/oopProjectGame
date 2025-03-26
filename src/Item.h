@@ -7,7 +7,7 @@
 using namespace std;
 
 struct ItenStruct{
-	int itemID;
+	static int itemID;
 	string name;
 	int money;
 	int emotion;
