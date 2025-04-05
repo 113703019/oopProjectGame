@@ -6,10 +6,12 @@
 #include "Status.h"
 using namespace std;
 
-struct ItenStruct{
+struct ItemStruct{
 	static int itemID;
 	string name;
+	string des;
 	int money;
+	int moral;
 	int emotion;
 };
 
@@ -18,7 +20,7 @@ class Item{
 		Itemstruct _item;
 	public:
 		Item();
-		Item(string name,int money,int emotion);
+		Item(string name,string des,int money,int moral,int emotion);
 		Item(const Item& ogItem);
 		Item& operator = (const Item& ogItem);
 		~Item();
@@ -32,5 +34,9 @@ vector<Item> inventoryVec;
 
 vector<Item> shopVec;
 // Add shop items here
+// shopVec.push_back(name,des,money,moral,emotion);
+shopVec.push_back("Doll","",50,5,10);
+shopVec.push_back("Game Console",200,0,50);
+shopVec.push_back("")
 
 #endif
