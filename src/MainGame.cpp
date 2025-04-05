@@ -6,7 +6,8 @@
  * (2) Plan the kid's work for this month.
  * 
  * In short, there are 12 rounds before the ending.
- * The kid's moral value will decide the ending.
+ * The kid's moral, favor and money values will decide the ending.
+ * There are 8 endings in total.
  *
  * ----- Monthly Expense -----
  *
@@ -20,6 +21,13 @@
  * If it's too low, the kid will refuse to work.
  * You can buy gifts for the kid to be happier.
  * Or, you can let the kid rest for this month.
+ *
+ * ----- Jail -----
+ *
+ * Bad works are risky.
+ * The kid might get caught and get jailed.
+ * The player can get them back by paying a huge amount of money.
+ * Else, the kid will stay in jail for months and cannot work or rest.
 */
 
 #include <iostream>
@@ -137,6 +145,7 @@ void ending(int end){
 }
 
 int main(){
+	// Game start
 	string kidName;
 	cout << "Please enter your kid's name: ";
 	cin >> kidName;
@@ -145,7 +154,8 @@ int main(){
 	cin >> playerName;
 	for(int round=0;round<12;round++)
 		Round(round);
-	ending(YourKid.getStatus().moral);
+	Kid end = YourKid.getStatus()
+	ending(end.moral,end.favor,end.money);
 		
 	return 0;
 }
