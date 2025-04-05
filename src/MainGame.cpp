@@ -29,7 +29,7 @@ using namespace std;
 Kid YourKid;
 string playerName = "Player";
 const foodMoney = 50; // Monthly expense. Essential to pay for survival.
-enum endings = {STARVE,GOOD,NEUTRAL,BAD};
+enum endings = {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
 void Talk();
 void Work();
@@ -70,17 +70,47 @@ void Round(int curMonth){
 
 void roundEnd(){
 	if(YourKid.getStatus().money < foodMoney){
-		cout << "The money wasn't enough to pay for " << YourKid.getStatus().name << "'s meals..." << endl
-			 << YourKid.getStatus().name << " died from starvation." << endl;
-		// In progress: gameOver(STARVE);
+		gameOver(STARVE);
 		return;
-	}
-	// In progress: A summary of this month's money and kid's values should be printed at the end of the month.
+	} else{
+		// In progress: A summary of this month's money and kid's values should be printed at the end of the month.
+		int offset = 0;
+		for(int i=0;i<resultHeight;i++){
+			for(int j=0;j<resultWidth;j++){
+				if(i!=9 && offset>=2 || i==9 && offset>=3) offset = 0; // Reset offset
+				if(monthResult[i][j]=='x'){ // Replace placeholder
+					switch(i){
+						case(2):{ // Month
+							monthResult[i][j] = month[curMonth][offset++];
+							break;
+						}case(5):{ // Moral
+							if(offset==0)
+								monthResult[i][j] = moral>0 ? '+' : '-';
+							else
+								monthResult[i][j] = moral%(2-(offset++));
+							break;
+						}case(7):{ // Favor
+							// Favorbility in progress...
+							break;
+						}case(9):{ // Money
+							if(offset==0)
+								monthResult[i][j] = moral>0 ? '+' : '-';
+                            else
+                                monthResult[i][j] = money%(3-(offset++));
+                            break;
+						} default:
+							continue;
+					} // switch(i)
+				} // if(monthResult[i][j])
+				cout << monthResult[i][j];
+			} // for(j)
+		} // for(i)
+	} // if
 }
 
 void ending(int end){
 	string name = YourKid.getStatus().name;
-	switch(end){
+	switch(end){ // In progress: 9 endings base on moral, money and favor
 		case(STARVE):{
 			cout << "The money wasn't enough to pay for " << name << "'s meals..." << endl
 				 << "\"" << playerName << ", I'm so... hungry...\"" << endl
