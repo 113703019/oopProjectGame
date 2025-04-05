@@ -31,25 +31,30 @@
 */
 
 #include <iostream>
+#include <array>
 #include "Status.h"
 using namespace std;
 
 Kid YourKid;
 string playerName = "Player";
-const foodMoney = 50; // Monthly expense. Essential to pay for survival.
-enum endings = {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
+const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
+const int moneySwitch = 500; // < switch: Bad, > switch: Good
+const int moralSwitch = 0;
+const int favorSwitch = 0;
+enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
 void Talk();
 void Work();
 void Plan();
 void Inventory();
 void Shop();
-void roundEnd();
+void roundEnd(int curMonth);
 
 void Round(int curMonth){
 
-	cout << YourKid.getStatus().name << ": \"Hello! What should I do this month?\"" << endl << endl /* Temporary script*/
-		 << month[curMonth] << ' ' << YourKid.getStatus().money << "                        " << YourKid.getStatus().emotion << ' ' << YourKid.getStatus().moral << endl; /* Status */
+	StatStruct cur = YourKid.getStatus();
+	cout << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl /* Temporary script*/
+		 << month[curMonth] << ' ' << cur.money << "                        " << cur.emotion << ' ' << cur.moral << endl /* Status */
 	 	 << "(Q) Talk | (W) Plan The Month | (E) Inventory | (R) Shop" << std::endl; // UI instructions
 	char uiInput;
 	do{
@@ -70,22 +75,25 @@ void Round(int curMonth){
 			} default:
 				continue;
 		}
-	} while(1)
+	} while(1);
 
-	roundEnd();
+	roundEnd(curMonth);
 
 }
 
-void roundEnd(){
-	if(YourKid.getStatus().money < foodMoney){
-		gameOver(STARVE);
+void ending(int end);
+
+void roundEnd(int curMonth){
+	StatStruct curStats = YourKid.getStatus();
+	if(curStats.money < foodMoney){
+		ending(STARVE);
 		return;
 	} else{
 		// In progress: A summary of this month's money and kid's values should be printed at the end of the month.
 		int offset = 0;
 		for(int i=0;i<resultHeight;i++){
 			for(int j=0;j<resultWidth;j++){
-				if(i!=9 && offset>=2 || i==9 && offset>=3) offset = 0; // Reset offset
+				if((i!=9 && offset>=2) || (i==9 && offset>=3)) offset = 0; // Reset offset
 				if(monthResult[i][j]=='x'){ // Replace placeholder
 					switch(i){
 						case(2):{ // Month
@@ -93,18 +101,18 @@ void roundEnd(){
 							break;
 						}case(5):{ // Moral
 							if(offset==0)
-								monthResult[i][j] = moral>0 ? '+' : '-';
+								monthResult[i][j] = curStats.moral>0 ? '+' : '-';
 							else
-								monthResult[i][j] = moral%(2-(offset++));
+								monthResult[i][j] = curStats.moral%(2-(offset++));
 							break;
 						}case(7):{ // Favor
 							// Favorbility in progress...
 							break;
 						}case(9):{ // Money
 							if(offset==0)
-								monthResult[i][j] = moral>0 ? '+' : '-';
+								monthResult[i][j] = curStats.money>0 ? '+' : '-';
                             else
-                                monthResult[i][j] = money%(3-(offset++));
+                                monthResult[i][j] = curStats.money%(3-(offset++));
                             break;
 						} default:
 							continue;
@@ -116,30 +124,60 @@ void roundEnd(){
 	} // if
 }
 
-void ending(int end){
+int endCoding(int money,int moral,int favor){
+	// Decide the ending code
+	array<bool,3> endBool = {money>=moneySwitch,moral>=moralSwitch,favor>=favorSwitch};
+	if(endBool==array<bool,3>{true,true,true}) return GGG;
+	else if(endBool==array<bool,3>{false,true,true}) return BGG;
+	else if(endBool==array<bool,3>{true,false,true}) return GBG;
+	else if(endBool==array<bool,3>{true,true,false}) return GGB;
+	else if(endBool==array<bool,3>{false,false,true}) return BBG;
+	else if(endBool==array<bool,3>{false,true,false}) return BGB;
+	else if(endBool==array<bool,3>{true,false,false}) return GBB;
+	else return BBB;
+}
+
+void ending(int endCode){
 	string name = YourKid.getStatus().name;
-	switch(end){ // In progress: 9 endings base on moral, money and favor
-		case(STARVE):{
+	switch(endCode){ // In progress: 9 endings based on moral, money and favor in order
+		case(STARVE):{ // Ending(0): Starved
 			cout << "The money wasn't enough to pay for " << name << "'s meals..." << endl
 				 << "\"" << playerName << ", I'm so... hungry...\"" << endl
 			     << name << " died from starvation." << endl;
 			break;
-		} case(GOOD):{
-			cout << name << " has been dilligently working throughout the year." << endl
-				 << "It's time for them to move out and live their own life." << endl << endl
-				 << "\"Goodbye, " << playerName << "! I love you!\"" << endl
-				 << "Thank you so much for raising me!" << endl;
+		}case(GGG):{ // Ending(1): Happily ever after
+			cout << name << " has been working hard. They have saved quite the amount of money." << endl
+				 << "With all the money," << name << " bought a beautiful place for you both to live in." << endl << endl
+				 << "\"" << playerName << ", thank you so much for raising me.\"" << endl
+				 << "You and " << name << " live a peaceful, happy life ever after." << endl << endl
+				 << "Ending(1): Happily ever after" << endl;
 			break;
-		} case(NEUTRAL):{
-			cout << name << " feels conflicted." << endl
-				 << "\"Is anything acceptable for the sake of money?\"" << endl
-				 << "Guess it's now their job to figure that out."
-		} case(BAD):{
+		}case(BGG):{ // Ending(2): Mafia gang for you
+			// In progress
+			break;
+		}case(GBG):{ // Ending(3): Life is difficult but happy
+			// In progress
+			break;
+		}case(GGB):{ // Ending(4): May we never meet again
+			// In progress
+			break;
+		}case(BBG):{ // Ending(5): Got my hands dirty for you
+			// In progress
+			break;
+		}case(BGB):{ // Ending(6): Erased
+			// In progress
+			break;
+		}case(GBB):{ // Ending(7): Suicide/Escaped
+			// In progress
+			break;
+		}case(BBB):{ // Ending(8): It's all for my sake
 			cout << "After a year, " << name << " comes to you." << endl << endl
 				 << "\"You are so much richer than me, right?\"" << endl
-				 << "\"Then, it's only natural...\"" << endl
-				 << "\"Goodbye, dear " << playerName << ".\"" << endl << endl
-				 << "What have you done?" << endl;
+				 << "\"You kept all your money to yourself and let me do the dirty work, right?\"" << endl
+				 << "\"Then, it's only natural...\"" << endl << endl
+				 << "\"Goodbye, you f*cking bastard.\"" << endl << endl
+				 << "What have you done?" << endl << endl
+				 << "Ending(8): It's all for my sake" << endl;
 		}
 	}
 }
@@ -154,8 +192,8 @@ int main(){
 	cin >> playerName;
 	for(int round=0;round<12;round++)
 		Round(round);
-	Kid end = YourKid.getStatus()
-	ending(end.moral,end.favor,end.money);
-		
+	StatStruct end = YourKid.getStatus();
+	int endCode = endCoding(end.moral,end.money,1/* In progress: end.favor */);
+	ending(endCode);
 	return 0;
 }

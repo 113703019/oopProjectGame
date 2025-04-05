@@ -24,3 +24,14 @@ Work::~Work(){
 	delete _moral;
 	delete _money;
 }
+
+PlanManager::PlanManager(){
+	// Add new works here
+	// _workVec.push_back(_name,_moral,_money);
+	_workVec.emplace_back(); // Default: Rest
+	_workVec.emplace_back("Clerk",10,120);
+	_workVec.emplace_back("Vet",25,200);
+	_workVec.emplace_back("Thief",-10,200);
+	_workVec.emplace_back("Robber",-25,450);
+	_workVec.emplace_back("Drug dealer",-60,1500);
+}

@@ -5,22 +5,24 @@
 #include <vector>
 using namespace std;
 
-string month = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+char month[12][3+1] = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+
+struct StatStruct{
+	string name;
+	int money;
+    int emotion;
+	int moral;
+};
 
 class Kid{
 	private:
-		struct Status{
-			string name;
-			int money;
-			int emotion;
-			int moral;
-		};
-		Status _status;
+		StatStruct _status;
 	public:
 		Kid();
 		Kid(string name);
 		void setName(string name);
-		Status getStatus();
+		StatStruct getStatus();
+		void useItem(Item targetItem){
 };
 
 const int resultHeight = 16;
@@ -38,7 +40,7 @@ char monthResult[resultHeight][resultWidth+1] = // The x's are placeholders for 
 	"|                      |",
 	"|  Money         xxxx  |",
 	"|                      |",
-	"|----------------------|"
+	"|----------------------|",
 	"|                      |",
 	"|  xxxxxxxxxxxxxxxxxx  |",
 	"|                      |",

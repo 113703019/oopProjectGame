@@ -7,9 +7,9 @@
 using namespace std;
 
 struct ItemStruct{
-	static int itemID;
+	int itemID;
 	string name;
-	string des;
+	string desc;
 	int money;
 	int moral;
 	int emotion;
@@ -17,26 +17,27 @@ struct ItemStruct{
 
 class Item{
 	private:
-		Itemstruct _item;
+		ItemStruct _item;
+		static int _itemIDcounter;
 	public:
 		Item();
-		Item(string name,string des,int money,int moral,int emotion);
+		Item(string name,string desc,int money,int moral,int emotion);
 		Item(const Item& ogItem);
 		Item& operator = (const Item& ogItem);
 		~Item();
 
 		ItemStruct getInfo();
-		void buyItem(int id);
 };
 
-vector<Item> inventoryVec;
-// Add default inventory items here
+class ItemManager{
+	private:
+		vector<Item> _inventoryVec;
+		vector<Item> _shopVec;
+	public:
+		ItemManager();
 
-vector<Item> shopVec;
-// Add shop items here
-// shopVec.push_back(name,des,money,moral,emotion);
-shopVec.push_back("Doll","",50,5,10);
-shopVec.push_back("Game Console",200,0,50);
-shopVec.push_back("")
+		Item* getInfoViaID(int id);
+		void buyItem(int id);
+};
 
 #endif

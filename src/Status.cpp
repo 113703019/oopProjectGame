@@ -6,20 +6,20 @@
 // _status(name,money,emotion,moral)
 
 Kid::Kid()
-	:_status("Your kid",200,0,0);{}
+	:_status{"Your kid",200,0,0}{}
 
 Kid::Kid(string name)
-	:_status(name,200,0,0){}
+	:_status{name,200,0,0}{}
 
-Status Kid::getStatus(){
+StatStruct Kid::getStatus(){
 	return _status;
 }
 
-void setName(string name){
+void Kid::setName(string name){
 	_status.name = name;
 }
 
 void Kid::useItem(Item targetItem){
-	status._emotion += targetItem.getInfo()._emotion;
+	_status._emotion += targetItem.getInfo()._emotion;
 	inventoryVec.pop(targeItem.getInfo()._itemID);
 }
