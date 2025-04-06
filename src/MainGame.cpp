@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <array>
+#include <string>
 #include "Status.h"
 #include "Item.h"
 using namespace std;
@@ -39,6 +40,7 @@ using namespace std;
 Kid YourKid;
 ItemManager IManager;
 string playerName = "Player";
+const int screenWidth = 69; // For UI formatting.
 const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
 const int moneySwitch = 500; // < switch: Bad, > switch: Good
 const int moralSwitch = 0;
@@ -54,10 +56,12 @@ void roundEnd(int curMonth);
 
 void Round(int curMonth){
 
-	StatStruct cur = YourKid.getStatus();
-	cout << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl /* Temporary script*/
-		 << monthName[curMonth] << ' ' << cur.money << "                        " << cur.emotion << ' ' << cur.moral << endl /* Status */
-	 	 << "(Q) Talk | (W) Plan The Month | (E) Inventory | (R) Shop" << std::endl; // UI instructions
+	StatStruct cur = YourKid.getStatus(); 
+	cout << endl << string(screenWidth,'-') << endl // Format
+		 << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl // Temporary script
+		 << monthName[curMonth] << ' ' << string((screenWidth-3/*Month*/-3/*' '+" $"*/-to_string(cur.money).length()),'-') << " $" << cur.money << endl // Status
+	 	 << "(Q) Talk | (W) Plan The Month | (E) Status | (R) Inventory | (T) Shop" << endl // UI instructions
+		 << string(screenWidth,'-') << endl; // Format
 	char uiInput;
 	do{
 		cin >> uiInput;
@@ -69,9 +73,12 @@ void Round(int curMonth){
 				// In progress: Plan() - Plan the month and start Work()
 				break;
 			} case('E'):{
-				// In progress: Inventory() - Shows the inventory and allows using items.
+				// In progress: Status() - Shows the character's status.
 				break;
 			} case('R'):{
+				// In progress: Inventory() - Shows the inventory and allows using items.
+				break;
+			} case('T'):{
 				// In progress: Shop() - Shows the shop and allows buying items
 				break;
 			} default:
