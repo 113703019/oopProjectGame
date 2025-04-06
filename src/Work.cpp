@@ -1,28 +1,31 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Status.h"
 #include "Work.h"
 
-Work::Work(){
-	_name = "Rest";
-	_moral = 0;
-	_money = 0;
+Work::Work()
+	:_info{"Rest",0,0}{}
+
+Work::Work(string name,int moral,int money)
+	:_info{name,moral,money}{}
+
+Work::Work(const Work& ogWork){
+	WorkStruct og = ogWork._info;
+	_info = {og.name,og.money,og.moral};
 }
 
-Work::Work(string &name,int moral,int money)
-	:_name(name), _moral(moral), _money(money){}
-
-void Work::goToWork(Work work){
-	getStatus().moral += work._moral;
-	getStatus().money += work._money;
-	getStatus().emotion -= 15;
+Work& Work::operator = (const Work& ogWork){
+	if(this == &ogWork) return *this;
+	// No pointers, this can be kept simple
+	WorkStruct og = ogWork._info;
+	_info = {og.name,og.money,og.moral};
+	return *this;
 }
 
-Work::~Work(){
-	delete _name;
-	delete _moral;
-	delete _money;
+Work::~Work(){}
+
+WorkStruct Work::getInfo(){
+	return _info;
 }
 
 PlanManager::PlanManager(){

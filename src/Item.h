@@ -38,6 +38,7 @@ class ItemManager{
 
 		Item* getInfoViaID(int id);
 		void buyItem(int id);
+		void useItem(int id,Kid& kid);
 };
 
 #endif

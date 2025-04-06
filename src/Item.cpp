@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
-#include "Item.h"
 #include "Status.h"
+#include "Item.h"
 using namespace std;
 
 int Item::_itemIDcounter = 0;
@@ -56,4 +56,14 @@ void ItemManager::buyItem(int id){
 		cout << "No such item in shop!" << endl;
 	else
 		_inventoryVec.push_back(*result);
+}
+
+void ItemManager::useItem(int id,Kid& kid){
+	Item* result = getInfoViaID(id);
+	if(result==nullptr)
+		cout << "No such item in inventory!" << endl;
+	else{
+		kid.useItem(result->getInfo().emotion,result->getInfo().moral);
+		_inventoryVec.erase(_inventoryVec.begin()+id);
+	}
 }

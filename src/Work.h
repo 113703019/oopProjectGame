@@ -3,21 +3,26 @@
 
 #include <string>
 #include <vector>
-#include "Status.h"
+using namespace std;
+
+struct WorkStruct{
+	string name;
+	int moral; // Good work > 0
+				// Bad work < 0
+	int money;
+};
 
 class Work{
 	private:
-		string _name;
-		int _moral; // Good work > 0
-					// Bad work < 0
-		int _money;
+		WorkStruct _info;
 	public:
 		Work();
 		Work(string nm,int mr,int mn);
 		Work(const Work& ogWork);
 		Work& operator = (const Work& ogWork);
 		~Work();
-		void goToWork(Work work);
+
+		WorkStruct getInfo();
 };
 
 class PlanManager{

@@ -3,9 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include "Work.h"
 using namespace std;
 
-char month[12][3+1] = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+extern const char monthName[12][3+1];
 
 struct StatStruct{
 	string name;
@@ -22,29 +23,13 @@ class Kid{
 		Kid(string name);
 		void setName(string name);
 		StatStruct getStatus();
-		void useItem(Item targetItem){
+		void useItem(int emotion,int moral);
+		void goToWork(Work work);
 };
 
-const int resultHeight = 16;
-const int resultWidth = 24;
+static const int resultHeight = 16;
+static const int resultWidth = 24;
 
-char monthResult[resultHeight][resultWidth+1] = // The x's are placeholders for actual data
-{	"------------------------",
-	"|                      |",
-	"|  xxx Monthly Report  |",
-	"|                      |",
-	"|                      |",
-	"|  Moral          xxx  |",
-	"|                      |",
-	"|  Favor          xxx  |",
-	"|                      |",
-	"|  Money         xxxx  |",
-	"|                      |",
-	"|----------------------|",
-	"|                      |",
-	"|  xxxxxxxxxxxxxxxxxx  |",
-	"|                      |",
-	"------------------------"
-};
+extern char monthResult[resultHeight][resultWidth+1];
 
 #endif

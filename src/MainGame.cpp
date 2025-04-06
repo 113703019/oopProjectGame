@@ -33,9 +33,11 @@
 #include <iostream>
 #include <array>
 #include "Status.h"
+#include "Item.h"
 using namespace std;
 
 Kid YourKid;
+ItemManager IManager;
 string playerName = "Player";
 const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
 const int moneySwitch = 500; // < switch: Bad, > switch: Good
@@ -54,7 +56,7 @@ void Round(int curMonth){
 
 	StatStruct cur = YourKid.getStatus();
 	cout << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl /* Temporary script*/
-		 << month[curMonth] << ' ' << cur.money << "                        " << cur.emotion << ' ' << cur.moral << endl /* Status */
+		 << monthName[curMonth] << ' ' << cur.money << "                        " << cur.emotion << ' ' << cur.moral << endl /* Status */
 	 	 << "(Q) Talk | (W) Plan The Month | (E) Inventory | (R) Shop" << std::endl; // UI instructions
 	char uiInput;
 	do{
@@ -97,7 +99,7 @@ void roundEnd(int curMonth){
 				if(monthResult[i][j]=='x'){ // Replace placeholder
 					switch(i){
 						case(2):{ // Month
-							monthResult[i][j] = month[curMonth][offset++];
+							monthResult[i][j] = monthName[curMonth][offset++];
 							break;
 						}case(5):{ // Moral
 							if(offset==0)
