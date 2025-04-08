@@ -23,7 +23,9 @@ class Kid{
 		Kid();
 		Kid(string name);
 		void setName(string name);
+
 		StatStruct getStatus();
+		void talk(bool nice);
 		void useItem(int emotion,int moral);
 		void goToWork(Work work);
 };

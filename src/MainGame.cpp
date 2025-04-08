@@ -50,7 +50,7 @@ const int moralSwitch = 0; // Moral: -100 ~ 100
 const int favorSwitch = 0; // Favor: -100 ~ 100
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
-void Talk();
+void Talk(Kid& kid);
 void Work();
 void Plan();
 void Inventory();
@@ -85,7 +85,7 @@ void Round(int curYear,int curMonth){
 		cin >> uiInput;
 		switch(uiInput){
 			case('Q'):{
-				// In progress: Talk() - Talk with the kid. Response varies depending on moral & emotion.
+				Talk(YourKid); // Talk with the kid. Response varies depending on moral & emotion.
 				break;
 			} case('W'):{
 				// In progress: Plan() - Plan the month and start Work()
@@ -155,16 +155,21 @@ void roundEnd(int curYear,int curMonth){
 	} // if
 }
 
-void Talk(){
+void Talk(Kid& kid){
 	cout << "(1) I love you. | (2) I hate you." << endl;
 	int talkInput = 0;
 	switch(talkInput){
 		case(1):{
 			cout << "Your kid seems happy with your words!" << endl
-				 << "Favor + 5" << endl;
+				 << "Favor +5" << endl;
+			kid.talk(true);
 			break;
-		}
-		default:
+		}case(2):{
+			cout << "Your kid seems sad..." << endl
+				 << "Favor -5" << endl;
+			kid.talk(false);
+			break;
+		}default:
 			return;
 	}
 }

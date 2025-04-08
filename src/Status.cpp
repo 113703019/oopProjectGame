@@ -15,6 +15,11 @@ StatStruct Kid::getStatus(){
 	return _status;
 }
 
+void Kid::talk(bool nice){
+	int niceInt = nice ? 1 : -1;
+	_status.favor += niceInt*5;
+}
+
 void Kid::setName(string name){
 	_status.name = name;
 }
