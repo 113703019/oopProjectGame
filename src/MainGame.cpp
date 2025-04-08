@@ -50,9 +50,9 @@ const int moralSwitch = 0; // Moral: -100 ~ 100
 const int favorSwitch = 0; // Favor: -100 ~ 100
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
+int numInput = 0;
 void Talk(Kid& kid);
-void Work();
-void Plan();
+void Plan(Kid& kid);
 void Inventory();
 void Shop();
 void roundEnd(int curYear,int curMonth);
@@ -157,8 +157,8 @@ void roundEnd(int curYear,int curMonth){
 
 void Talk(Kid& kid){
 	cout << "(1) I love you. | (2) I hate you." << endl;
-	int talkInput = 0;
-	switch(talkInput){
+	cin >> numInput;
+	switch(numInput){
 		case(1):{
 			cout << "Your kid seems happy with your words!" << endl
 				 << "Favor +5" << endl;
@@ -172,6 +172,17 @@ void Talk(Kid& kid){
 		}default:
 			return;
 	}
+}
+
+void Plan(Kid& kid){
+	cout << endl << "What should" << kid.getStatus().name << "do for this month?" << endl;
+	for(int i=1;i<workVec.size()+1;i++){
+		cout << '(' << i << ") " << workVec[i-1] << endl;
+	cout << endl << "(0) Done" << endl;
+	cin >> numInput;
+	if(numInput==0) return; // In progress: Start working according to monthPlan(arr).
+	else if(numInput<=workVec.size()) return; // In progress: Record the plan in monthPlan(arr).
+	else return;
 }
 
 int endCoding(int money,int moral,int favor){
