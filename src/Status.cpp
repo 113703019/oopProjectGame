@@ -3,13 +3,13 @@
 #include "Status.h"
 #include "Item.h"
 
-// _status(name,money,emotion,moral)
+// _status(name,money,emotion,favor,moral)
 
 Kid::Kid()
-	:_status{"Your kid",200,0,0}{}
+	:_status{"Your kid",200,100,0,0}{}
 
 Kid::Kid(string name)
-	:_status{name,200,0,0}{}
+	:_status{name,200,100,0,0}{}
 
 StatStruct Kid::getStatus(){
 	return _status;
@@ -22,6 +22,7 @@ void Kid::setName(string name){
 void Kid::useItem(int emotion,int moral){
 	_status.emotion += emotion;
 	_status.moral += moral;
+	_status.favor += 5; // Currently, letting your kid use the gift you bought raises favor by 5.
 }
 
 void Kid::goToWork(Work work){
@@ -35,7 +36,7 @@ const char monthName[12][3+1] = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG"
 char monthResult[resultHeight][resultWidth+1] = // The x's are placeholders for actual data
 {   "------------------------",
     "|                      |",
-    "|  xxx Monthly Report  |",
+    "|  Yearx xxx   Report  |",
     "|                      |",
     "|                      |",
     "|  Moral          xxx  |",

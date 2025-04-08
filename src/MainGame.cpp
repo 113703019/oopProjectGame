@@ -35,16 +35,19 @@
 #include <string>
 #include "Status.h"
 #include "Item.h"
+#include "AsciiSprite.h"
 using namespace std;
 
 Kid YourKid;
 ItemManager IManager;
 string playerName = "Player";
 const int screenWidth = 69; // For UI formatting.
+const int artOffset = 30; // For UI formatting.
+
 const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
 const int moneySwitch = 500; // < switch: Bad, > switch: Good
-const int moralSwitch = 0;
-const int favorSwitch = 0;
+const int moralSwitch = 0; // Moral: -100 ~ 100
+const int favorSwitch = 0; // Favor: -100 ~ 100
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
 void Talk();
@@ -52,14 +55,29 @@ void Work();
 void Plan();
 void Inventory();
 void Shop();
-void roundEnd(int curMonth);
+void roundEnd(int curYear,int curMonth);
+void ending(int end);
 
-void Round(int curMonth){
+void Round(int curYear,int curMonth){
 
-	StatStruct cur = YourKid.getStatus(); 
-	cout << endl << string(screenWidth,'-') << endl // Format
-		 << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl // Temporary script
-		 << monthName[curMonth] << ' ' << string((screenWidth-3/*Month*/-3/*' '+" $"*/-to_string(cur.money).length()),'-') << " $" << cur.money << endl // Status
+	StatStruct cur = YourKid.getStatus();
+	int kidArt = NORMAL;
+	if(cur.emotion<50) kidArt = TIRED;
+	else if(cur.moral>50) kidArt = GOOD;
+	else if(cur.moral<-50) kidArt = BAD;
+
+	cout << endl << string(screenWidth,'-') << endl << endl; // Format
+	for(int i=0;i<artHeight;i++){ // Sprite
+		for(int j=0;j<(artOffset+artWidth);j++){
+			if(j<artOffset)
+				cout << ' ';
+			else
+				cout << asciiArt[kidArt][i][j-artOffset];
+		}
+	   	cout << endl;
+	}
+	cout << endl << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl // Temporary script
+		 << "Year" << curYear << ' ' << monthName[curMonth] << ' ' << string((screenWidth-8/*Year&Month*/-4/*' '*2+" $"*/-to_string(cur.money).length()),'-') << " $" << cur.money << endl // Status
 	 	 << "(Q) Talk | (W) Plan The Month | (E) Status | (R) Inventory | (T) Shop" << endl // UI instructions
 		 << string(screenWidth,'-') << endl; // Format
 	char uiInput;
@@ -86,27 +104,28 @@ void Round(int curMonth){
 		}
 	} while(1);
 
-	roundEnd(curMonth);
+	roundEnd(curYear,curMonth);
 
 }
 
-void ending(int end);
-
-void roundEnd(int curMonth){
+void roundEnd(int curYear,int curMonth){
 	StatStruct curStats = YourKid.getStatus();
 	if(curStats.money < foodMoney){
 		ending(STARVE);
 		return;
 	} else{
-		// In progress: A summary of this month's money and kid's values should be printed at the end of the month.
+		// A summary of this month's money and kid's values should be printed at the end of the month.
 		int offset = 0;
 		for(int i=0;i<resultHeight;i++){
 			for(int j=0;j<resultWidth;j++){
 				if((i!=9 && offset>=2) || (i==9 && offset>=3)) offset = 0; // Reset offset
 				if(monthResult[i][j]=='x'){ // Replace placeholder
 					switch(i){
-						case(2):{ // Month
-							monthResult[i][j] = monthName[curMonth][offset++];
+						case(2):{ // Year & Month
+							if(offset==0)
+								monthResult[i][j] = curYear;
+							else
+								monthResult[i][j] = monthName[curMonth][offset++];
 							break;
 						}case(5):{ // Moral
 							if(offset==0)
@@ -115,7 +134,10 @@ void roundEnd(int curMonth){
 								monthResult[i][j] = curStats.moral%(2-(offset++));
 							break;
 						}case(7):{ // Favor
-							// Favorbility in progress...
+							if(offset==0)
+                                monthResult[i][j] = curStats.favor>0 ? '+' : '-';
+                            else
+								monthResult[i][j] = curStats.favor%(2-(offset++));
 							break;
 						}case(9):{ // Money
 							if(offset==0)
@@ -131,6 +153,20 @@ void roundEnd(int curMonth){
 			} // for(j)
 		} // for(i)
 	} // if
+}
+
+void Talk(){
+	cout << "(1) I love you. | (2) I hate you." << endl;
+	int talkInput = 0;
+	switch(talkInput){
+		case(1):{
+			cout << "Your kid seems happy with your words!" << endl
+				 << "Favor + 5" << endl;
+			break;
+		}
+		default:
+			return;
+	}
 }
 
 int endCoding(int money,int moral,int favor){
@@ -199,10 +235,10 @@ int main(){
 	YourKid.setName(kidName);
 	cout << "Please enter how " << kidName << " should call you: ";
 	cin >> playerName;
-	for(int round=0;round<12;round++)
-		Round(round);
+	for(int round=0;round<24;round++)
+		Round(round/12,round%12);
 	StatStruct end = YourKid.getStatus();
-	int endCode = endCoding(end.moral,end.money,1/* In progress: end.favor */);
+	int endCode = endCoding(end.moral,end.money,end.favor);
 	ending(endCode);
 	return 0;
 }

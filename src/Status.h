@@ -12,6 +12,7 @@ struct StatStruct{
 	string name;
 	int money;
     int emotion;
+	int favor;
 	int moral;
 };
 
