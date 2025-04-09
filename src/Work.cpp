@@ -32,6 +32,7 @@ PlanManager::PlanManager(){
 	// Add new works here
 	// _workVec.push_back(_name,_moral,_money);
 	_workVec.emplace_back(); // Default: Rest
+	_workVec.emplace_back("Jail",0,0); // Jail (No emotion refill)
 	_workVec.emplace_back("Clerk",10,120);
 	_workVec.emplace_back("Vet",25,200);
 	_workVec.emplace_back("Thief",-10,200);
