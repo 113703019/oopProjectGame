@@ -30,6 +30,7 @@ class PlanManager{
 		vector<Work> _workVec;
 	public:
 		PlanManager();
+		vector<Work> getWork();
 };
 
 #endif

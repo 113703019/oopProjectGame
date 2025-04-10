@@ -1,1 +1,1 @@
-obj/Item.o: src/Item.cpp src/Item.h src/Status.h
+obj/Item.o: src/Item.cpp src/Status.h src/Work.h src/Item.h

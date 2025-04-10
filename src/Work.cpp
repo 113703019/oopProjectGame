@@ -39,3 +39,7 @@ PlanManager::PlanManager(){
 	_workVec.emplace_back("Robber",-25,450);
 	_workVec.emplace_back("Drug dealer",-60,1500);
 }
+
+vector<Work> PlanManager::getWork(){
+	return _workVec;
+}

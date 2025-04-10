@@ -8,9 +8,6 @@
 Kid::Kid()
 	:_status{"Your kid",200,100,0,0}{}
 
-Kid::Kid(string name)
-	:_status{name,200,100,0,0}{}
-
 StatStruct Kid::getStatus(){
 	return _status;
 }

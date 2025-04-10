@@ -21,7 +21,6 @@ class Kid{
 		StatStruct _status;
 	public:
 		Kid();
-		Kid(string name);
 		void setName(string name);
 
 		StatStruct getStatus();
