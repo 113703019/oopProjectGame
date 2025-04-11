@@ -40,9 +40,7 @@ static const int resultHeight = 16;
 static const int resultWidth = 24;
 
 enum monthAdvice {NORMAL,TIRED,POOR,JAIL};
-static const char monthAdvice =
-	{"   Doing great!   "," Kind of tired... ",
-	 "  We need money!  ","Staying in jail..."}
+static const char monthAdvice = {"   Doing great!   "," Kind of tired... ","  We need money!  ","Staying in jail..."};
 
 extern char monthResult[resultHeight][resultWidth+1];
 
