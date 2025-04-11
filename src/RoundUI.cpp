@@ -100,10 +100,10 @@ void RoundUI::roundEnd(int curYear,int curMonth){
                             monthResult[i][j] = curStats.money%(3-(offset++));
                         break;
 					}case(13):{ // Monthly summary & advices
-						if(curStats.jailed) monthResult[i][j] = monthAdvice[JAIL][j];
-						else if(emotion<emotionSwitchMonth) monthResult[i][j] = monthAdvice[TIRED][j];
-						else if(money<moneySwitchMonth) monthResult[i][j] = monthAdvice[POOR][j];
-						else monthResult[i][j] = monthAdvice[NORMAL][j];
+						if(curStats.jailed) monthResult[i][j] = monthAdvice[M_JAIL][j];
+						else if(curStats.emotion<emotionSwitchMonth) monthResult[i][j] = monthAdvice[M_TIRED][j];
+						else if(curStats.money<moneySwitchMonth) monthResult[i][j] = monthAdvice[M_POOR][j];
+						else monthResult[i][j] = monthAdvice[M_NORMAL][j];
 						break;
                     } default:
                         continue;

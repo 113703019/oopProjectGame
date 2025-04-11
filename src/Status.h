@@ -39,8 +39,8 @@ static const int moneySwitchMonth = 100; // -50 each month
 static const int resultHeight = 16;
 static const int resultWidth = 24;
 
-enum monthAdvice {NORMAL,TIRED,POOR,JAIL};
-static const char monthAdvice = {"   Doing great!   "," Kind of tired... ","  We need money!  ","Staying in jail..."};
+enum monthAdvice {M_NORMAL,M_TIRED,M_POOR,M_JAIL};
+static const char monthAdvice[4][19] = {"   Doing great!   "," Kind of tired... ","  We need money!  ","Staying in jail..."};
 
 extern char monthResult[resultHeight][resultWidth+1];
 
