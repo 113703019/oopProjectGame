@@ -68,35 +68,70 @@ void ending(int endCode){
 			     << name << " died from starvation." << endl;
 			break;
 		}case(GGG):{ // Ending(1): Happily ever after
-			cout << name << " has been working hard. They have saved quite the amount of money." << endl
+			cout << name << " said they wanted to show you something." << endl
+				 << "When you arrived at the place, the beauty almost got you stunned." << endl
 				 << "With all the money," << name << " bought a beautiful place for you both to live in." << endl << endl
 				 << "\"" << playerName << ", thank you so much for raising me.\"" << endl
 				 << "You and " << name << " live a peaceful, happy life ever after." << endl << endl
 				 << "Ending(1): Happily ever after" << endl;
 			break;
 		}case(BGG):{ // Ending(2): Mafia gang for you
-			// In progress
+			cout << "It's when you see two rows of people in suits bow down at you." << endl
+				 << "It's when you hear they call " << name << " their boss." << endl
+				 << "You finally started to grasp what's going on." << endl << endl
+				 << "\"" << playerName << ", I have my very own gang now...\"" << endl
+				 << "\"You will be forever safe under our care.\"" << endl << endl
+				 << "Ending(2): Mafia gang for you" << endl;
 			break;
 		}case(GBG):{ // Ending(3): Life is difficult but happy
-			// In progress
+			cout << "You and " << name << " struggle to make ends meet every month." << endl
+				 << "Making money is very difficult and tiring." << endl
+				 << "Despite so, " << name << " seems content." << endl << endl
+				 << "\"Even if things get tough at times...\"" << endl
+				 << "\"As long as I'm with you, " << playerName << ", I'm sure everything will be fine.\"" << endl << endl
+				 << "Ending(3): Life is difficult but happy" << endl;
 			break;
 		}case(GGB):{ // Ending(4): May we never meet again
-			// In progress
+			cout << "You see " << name << "standing at the front door with their stuff packed up." << endl
+				 << "Their expression seems determined and serious." << endl << endl
+				 << "\"Thank you for raising me, " << playerName << ", but...\"" << endl
+				 << "\"I am moving to somewhere very, very far away.\"" << endl
+				 << "\"Sincerely, may we never meet again.\"" << endl << endl
+				 << "Ending(4): May we never meet again" << endl;
 			break;
 		}case(BBG):{ // Ending(5): Got my hands dirty for you
-			// In progress
+			cout << name << " has become a slick criminal." << endl
+				 << "Life has been tough, but they are tougher." << endl
+				 << "They do not care whose blood they have to spill, just for you two to survive." << endl << endl
+				 << "\"In this world, it's killed or be killed...\"" << endl << endl
+				 << "Ending(5): Got my hands dirty for you" < endl;
 			break;
 		}case(BGB):{ // Ending(6): Erased
-			// In progress
+			cout << "One day, you hear footsteps behind you." << endl
+				 << "Then, before you could react-" << endl
+				 << "Something got injected into your neck." << endl
+				 << "You feel... breathless..." << endl << endl
+				 << "The distant voices of two in a phone call can be heard." << endl
+				 << "\"Yes, boss. The target is eliminated.\"" << endl
+				 << "\"No worries, I get payed, surely I'll get the work done, 'kay?\"" << endl << endl
+				 << "\" That '" << playerName << "' of yours doesn't exist anymore." << endl << endl
+				 << "Ending(6): Erased" << endl;
 			break;
-		}case(GBB):{ // Ending(7): Suicide/Escaped
-			// In progress
-			break;
+		}case(GBB):{ // Ending(7): I gently opened the door
+			cout << name << "'s anxiety seems to be getting worse and worse lately." << endl
+				 << "They suffer from constant nightmares." << endl
+				 << "Whether it's about starving to death anytime, or about your harsh words." << endl
+				 << "Still, they stayed silent, and endured everything..." << endl << endl
+				 << "Until they couldn't pull their neck away from the noose anymore." << endl << endl
+				 << "What have you done?" << endl << endl
+				 << "Ending(7): I gently opened the door" << endl;
+	 			 break;
 		}case(BBB):{ // Ending(8): It's all for my sake
-			cout << "After a year, " << name << " comes to you." << endl << endl
+			cout << "At the end of the year, " << name << " comes to you." << endl << endl
 				 << "\"You are so much richer than me, right?\"" << endl
-				 << "\"You kept all your money to yourself and let me do the dirty work, right?\"" << endl
-				 << "\"Then, it's only natural...\"" << endl << endl
+				 << "\"You kept all the money to yourself and let me do the dirty work, right?\"" << endl
+				 << "Their hands are trembling under fury." << endl << endl
+				 << "\"Right, it's only natural to... take what's rightfully mine.\"" << endl
 				 << "\"Goodbye, you f*cking bastard.\"" << endl << endl
 				 << "What have you done?" << endl << endl
 				 << "Ending(8): It's all for my sake" << endl;
