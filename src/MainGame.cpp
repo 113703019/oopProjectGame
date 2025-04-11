@@ -104,7 +104,7 @@ void ending(int endCode){
 				 << "Life has been tough, but they are tougher." << endl
 				 << "They do not care whose blood they have to spill, just for you two to survive." << endl << endl
 				 << "\"In this world, it's killed or be killed...\"" << endl << endl
-				 << "Ending(5): Got my hands dirty for you" < endl;
+				 << "Ending(5): Got my hands dirty for you" << endl;
 			break;
 		}case(BGB):{ // Ending(6): Erased
 			cout << "One day, you hear footsteps behind you." << endl
