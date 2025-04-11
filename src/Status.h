@@ -14,6 +14,7 @@ struct StatStruct{
     int emotion;
 	int favor;
 	int moral;
+	int jailed;
 };
 
 class Kid{
@@ -29,8 +30,19 @@ class Kid{
 		void goToWork(Work work);
 };
 
+static const int moneySwitch = 500; // < switch: Bad, > switch: Good
+static const int moralSwitch = 0; // Moral: -100 ~ 100
+static const int favorSwitch = 0; // Favor: -100 ~ 100
+static const int emotionSwitchMonth = 20; // Emotion: 0 ~ 100
+static const int moneySwitchMonth = 100; // -50 each month
+
 static const int resultHeight = 16;
 static const int resultWidth = 24;
+
+enum monthAdvice {NORMAL,TIRED,POOR,JAIL};
+static const char monthAdvice =
+	{"   Doing great!   "," Kind of tired... ",
+	 "  We need money!  ","Staying in jail..."}
 
 extern char monthResult[resultHeight][resultWidth+1];
 

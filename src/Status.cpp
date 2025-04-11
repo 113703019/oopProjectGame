@@ -3,10 +3,10 @@
 #include "Status.h"
 #include "Item.h"
 
-// _status(name,money,emotion,favor,moral)
+// _status(name,money,emotion,favor,moral,jailed)
 
 Kid::Kid()
-	:_status{"Your kid",200,100,0,0}{}
+	:_status{"Your kid",200,100,0,0,0}{}
 
 StatStruct Kid::getStatus(){
 	return _status;

@@ -44,10 +44,6 @@ using namespace std;
 Kid yourKid;
 ItemManager iManager;
 string playerName = "Player";
-
-const int moneySwitch = 500; // < switch: Bad, > switch: Good
-const int moralSwitch = 0; // Moral: -100 ~ 100
-const int favorSwitch = 0; // Favor: -100 ~ 100
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
 int endCoding(int money,int moral,int favor){
