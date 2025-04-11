@@ -15,7 +15,8 @@ class RoundUI{
 		void round(int curYear,int curMonth);
 		void roundEnd(int curYear,int curMonth);
 		bool talk();
-		void plan();
+		bool plan();
+		void status();
 		void inventory();
 		void shop();
 };

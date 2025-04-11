@@ -17,7 +17,9 @@ void RoundUI::round(int curYear,int curMonth){
     else if(cur.moral<-50) kidArt = BAD;
 	
 	char uiInput;
-	bool talkFlag = false; // You can only talk to the kid once every month.
+	bool flag[2] = {false};
+	enum flag {TALK,PLAN};
+	
 	do{
     	cout << endl << string(screenWidth,'-') << endl << endl; // Format
     	for(int i=0;i<artHeight;i++){ // Sprite
@@ -37,12 +39,14 @@ void RoundUI::round(int curYear,int curMonth){
         if(uiInput>90) uiInput-=32; // Uppercase
         switch(uiInput){
             case('Q'):{
-				if(talkFlag) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
-				else talkFlag = talk(); // Talk with the kid. Response varies depending on moral & emotion.
+				if(flag[TALK]) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
+				else flag[TALK] = talk(); // Talk with the kid. Response varies depending on moral & emotion.
 				break;
             } case('W'):{
-                // In progress: plan() - Plan the month and start Work()
-                break;
+				do flag[PLAN] = plan();
+				while(!flag[PLAN]);
+				// In progress: Start working.
+				break;
             } case('E'):{
                 // In progress: status() - Shows the character's status.
                 break;
@@ -95,6 +99,10 @@ void RoundUI::roundEnd(int curYear,int curMonth){
                         else
                             monthResult[i][j] = curStats.money%(3-(offset++));
                         break;
+					}case(13):{ // Monthly summary & advices
+						/*if() In progress
+						monthResult[i][j] = ;*/
+						break;
                     } default:
                         continue;
                 } // switch(i)
@@ -125,25 +133,42 @@ bool RoundUI::talk(){
 }
 
 
-void RoundUI::plan(){
+bool RoundUI::plan(){
 	PlanManager pManager;
 	vector<Work> allWorks = pManager.getWork();
-	Work monthPlan[3];
-    cout << endl << "What should" << _kid.getStatus().name << "do for this month?" << endl;
-    for(int i=1;i<int(allWorks.size())+1;i++){
-        cout << '(' << i << ") " << allWorks[i-1].getInfo().name << endl;
-	    cout << endl << "(0) Done" << endl;
-		int numInput = 0;
-    	cin >> numInput;
-    	int planOffset = 0;
-    	while(true){
-        	if(numInput==0)
-            	return; // In progress: Start working according to monthPlan(arr).
-	        else if(numInput<=int(allWorks.size()))
-				return; // monthPlan[planOffset++] = /* The work */;
-        	else return;
+	Work* monthPlan = new Work[3];
+	int numInput = 0;
+	int planOffset = 0;
+    cout << endl << "What should " << _kid.getStatus().name << " do for this month?" << endl;
+
+	for(int plans=0;plans<3;plans++){
+    	for(int i=1;i<int(allWorks.size());i++){
+        	cout << endl << '(' << i << ") " << allWorks[i].getInfo().name;
+		} cout << endl << endl << "Current plans:" << endl; // Format
+		for(int i=0;i<3;i++){
+			if(monthPlan[i].getInfo().name=="Unknown") cout << "(Nothing yet)" << endl;
+			else cout << monthPlan[i].getInfo().name << endl;
 		}
-    }
+    	cin >> numInput;
+        if(numInput<=int(allWorks.size()))
+			monthPlan[planOffset++] = Work(allWorks[numInput]);
+	}
+
+	cout << endl << endl << "Plan for the month:" << endl;
+	for(int i=0;i<3;i++)
+		cout << monthPlan[i].getInfo().name << endl;
+	cout << endl << "(0) Done | (1) Reset" << endl;
+	cin >> numInput;
+	if(numInput==0)
+		return true; // In progress: Start working according to monthPlan(arr).
+					 // Remember to delete monthPlan whenever a month ends.
+	else if(numInput==1)
+		delete [] monthPlan;
+	return false; // Do plan() again.
+}
+
+void RoundUI::status(){
+		
 }
 
 void RoundUI::inventory(){

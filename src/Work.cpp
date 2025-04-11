@@ -4,21 +4,19 @@
 #include "Work.h"
 
 Work::Work()
-	:_info{"Rest",0,0}{}
+	:_info{"Unknown",0,0}{}
 
 Work::Work(string name,int moral,int money)
 	:_info{name,moral,money}{}
 
 Work::Work(const Work& ogWork){
-	WorkStruct og = ogWork._info;
-	_info = {og.name,og.money,og.moral};
+	_info = ogWork._info;
 }
 
 Work& Work::operator = (const Work& ogWork){
 	if(this == &ogWork) return *this;
 	// No pointers, this can be kept simple
-	WorkStruct og = ogWork._info;
-	_info = {og.name,og.money,og.moral};
+	_info = ogWork._info;
 	return *this;
 }
 
@@ -31,8 +29,8 @@ WorkStruct Work::getInfo(){
 PlanManager::PlanManager(){
 	// Add new works here
 	// _workVec.push_back(_name,_moral,_money);
-	_workVec.emplace_back(); // Default: Rest
 	_workVec.emplace_back("Jail",0,0); // Jail (No emotion refill)
+	_workVec.emplace_back("Rest",0,0); // Rest (With emotion refill)
 	_workVec.emplace_back("Clerk",10,120);
 	_workVec.emplace_back("Vet",25,200);
 	_workVec.emplace_back("Thief",-10,200);

@@ -1,9 +1,10 @@
 /* ----- Introduction -----
  *
- * The game lasts for a year.
+ * The game lasts for two years.
  * On each Month's first day, the player can
  * (1) Buy things for the kid.
  * (2) Plan the kid's work for this month.
+ *	   The kid has 3 time slots each month.
  * 
  * In short, there are 12 rounds before the ending.
  * The kid's moral, favor and money values will decide the ending.

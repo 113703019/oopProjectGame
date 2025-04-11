@@ -35,6 +35,25 @@ void Kid::goToWork(Work work){
 
 const char monthName[12][3+1] = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
 
+char status[resultHeight][resultWidth+1] = // The x's are placeholders for actual data
+{   "------------------------",
+    "|                      |",
+    "|  xxxxxxxxxxxxxxxxxx  |",
+    "|                      |",
+    "|                      |",
+    "|  Moral         xxxx  |",
+    "|                      |",
+    "|  Favor         xxxx  |",
+    "|                      |",
+    "|  Money         xxxx  |",
+    "|                      |",
+    "|----------------------|",
+    "|                      |",
+    "|  xxxxxxxxxxxxxxxxxx  |",
+    "|                      |",
+    "------------------------"
+};
+
 char monthResult[resultHeight][resultWidth+1] = // The x's are placeholders for actual data
 {   "------------------------",
     "|                      |",
