@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "RoundUI.h"
 #include "Status.h"
@@ -171,44 +172,60 @@ bool RoundUI::plan(bool jailed){
 	cout << endl << "(0) Done | (1) Reset" << endl;
 	cin >> numInput;
 	if(numInput==0)
-		return true; // In progress: Start working according to monthPlan(arr).
+		return monthPlan; // In progress: Start working according to monthPlan(arr).
 					 // Remember to delete monthPlan whenever a month ends.
 	else if(numInput==1)
 		delete [] monthPlan;
-	return false; // Do plan() again.
+	return NULL; // Do plan() again.
+}
+
+void RoundUI::work(){
+	
 }
 
 void RoundUI::status(){
 	StatStruct curStats = _kid.getStatus();
 	int offset = 0;
+	string strNum[3] = {to_string(curStats.moral),to_string(curStats.favor),to_string(curStats.money)};
     for(int i=0;i<resultHeight;i++){
+		offset = 0; // Reset offset
         for(int j=0;j<resultWidth;j++){
-            if((i!=9 && offset>=2) || (i==9 && offset>=3)) offset = 0; // Reset offset
             if(statResult[i][j]=='x'){ // Replace placeholder
                 switch(i){
-                    case(2):{ // Kid's name
-						// In progress: if(offset>(kid's name length)) cout << ' ';
-                        // In progress: else cout << (kid's name)[curMonth][offset++];
+					case(2):{ // Kid's name
+						// In progress: Slight offset needed
+						if(offset>int(curStats.name.size())) cout << ' ';
+                        else cout << curStats.name[offset++];
                         break;
                     }case(5):{ // Moral
-                        cout << curStats.moral%(10^(4-(offset++)));
+						if(offset>4||strNum[0][offset]<'0'||strNum[0][offset]>'9')
+							cout << ' ';
+						else cout << strNum[0][offset++];
                         break;
                     }case(7):{ // Favor
-                        cout << curStats.favor%(10^(4-(offset++)));
+                        if(offset>4||strNum[1][offset]<'0'||strNum[1][offset]>'9')
+							cout << ' ';
+						else cout << strNum[1][offset++];
                         break;
                     }case(9):{ // Money
-                        cout << curStats.money%(10^(4-(offset++)));
+                        if(offset>4||strNum[2][offset]<'0'||strNum[2][offset]>'9')
+							cout << ' ';
+						else cout << strNum[2][offset++];
                         break;
                     }case(13):{ // Monthly summary & advices
-                        if(curStats.jailed) cout << monthAdvice[M_JAIL][j];
-                        else if(curStats.emotion<emotionSwitchMonth) cout << monthAdvice[M_TIRED][j];
-                        else if(curStats.money<moneySwitchMonth) cout << monthAdvice[M_POOR][j];
-                        else cout << monthAdvice[M_NORMAL][j];
-                        break;
+						char output;
+						if(curStats.jailed) output = monthAdvice[M_JAIL][offset++];
+                        else if(curStats.emotion<emotionSwitchMonth) output = monthAdvice[M_TIRED][offset++];
+                        else if(curStats.money<moneySwitchMonth) output = monthAdvice[M_POOR][offset++];
+                        else output = monthAdvice[M_NORMAL][offset++];
+
+						if(output) cout << output;
+						else cout << ' ';
+						break;
                     } default:
                         cout << statResult[i][j];
                 } // switch(i)
-            } // if(monthResult[i][j])
+            } else cout << statResult[i][j];
         } // for(j)
 		cout << endl;
     } // for(i)	
