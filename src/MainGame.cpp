@@ -41,7 +41,7 @@
 #include "Work.h"
 using namespace std;
 
-Kid yourKid;
+Kid yourKid(false);
 ItemManager iManager;
 string playerName = "Player";
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor

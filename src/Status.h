@@ -21,13 +21,15 @@ class Kid{
 	private:
 		StatStruct _status;
 	public:
-		Kid();
+		Kid(bool temp);
 		void setName(string name);
 
 		StatStruct getStatus();
+		void resetTemp();
+		void addValues(Kid& temp);
 		void talk(bool nice);
 		void useItem(int emotion,int moral);
-		void goToWork(Work work);
+		void goToWork(string name,Work work);
 };
 
 static const int moneySwitch = 500; // < switch: Bad, > switch: Good

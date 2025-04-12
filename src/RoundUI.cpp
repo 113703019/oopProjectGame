@@ -19,9 +19,11 @@ void RoundUI::round(int curYear,int curMonth){
     else if(cur.moral<-50) kidArt = BAD;
 	
 	char uiInput;
-	bool flag[2] = {false};
-	enum flag {TALK,PLAN};
+	bool talkFlag = false;
+	_tempStat.resetTemp();
+	Work* monthPlan = new Work[3];
 	
+	bool monthEnd = false;
 	do{
     	cout << endl << string(screenWidth,'-') << endl << endl; // Format
     	for(int i=0;i<artHeight;i++){ // Sprite
@@ -41,13 +43,15 @@ void RoundUI::round(int curYear,int curMonth){
         if(uiInput>90) uiInput-=32; // Uppercase
         switch(uiInput){
             case('Q'):{
-				if(flag[TALK]) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
-				else flag[TALK] = talk(); // Talk with the kid. Response varies depending on moral & emotion.
+				if(talkFlag) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
+				else talkFlag = talk(); // Talk with the kid. Response varies depending on moral & emotion.
 				break;
             } case('W'):{
-				do flag[PLAN] = plan(cur.jailed);
-				while(!flag[PLAN]);
-				// In progress: Start working.
+				do monthPlan = plan(cur.jailed);
+				while(monthPlan[2].getInfo().name=="Unknown");
+				work(monthPlan);
+				delete [] monthPlan;
+				monthEnd = true;
 				break;
             } case('E'):{
                 status();
@@ -61,57 +65,64 @@ void RoundUI::round(int curYear,int curMonth){
             } default:
                 continue;
         }
-    } while(1);
+    } while(!monthEnd);
 
-    roundEnd(curYear,curMonth);
-
+	roundEnd(curYear,curMonth);
 }
 
 void RoundUI::roundEnd(int curYear,int curMonth){
-	// In progress: roundEnd should print the changed value of this month, not the main value.
-    StatStruct curStats = _kid.getStatus();
+    StatStruct curStats = _tempStat.getStatus();
+	int offset = 0;
+	string strNum[3] = {to_string(curStats.moral),to_string(curStats.favor),to_string(curStats.money)};
     
+	// Add the temp values to the main values.
+	_kid.addValues(_tempStat);
+
 	// A summary of this month's money and kid's values should be printed at the end of the month.
-    int offset = 0;
     for(int i=0;i<resultHeight;i++){
+		offset = 0; // Reset offset
         for(int j=0;j<resultWidth;j++){
-            if((i!=9 && offset>=2) || (i==9 && offset>=3)) offset = 0; // Reset offset
             if(monthResult[i][j]=='x'){ // Replace placeholder
                 switch(i){
                     case(2):{ // Year & Month
-                        if(offset==0)
-                            cout << curYear;
-                        else
-                            cout << monthName[curMonth][offset++];
+                        if(offset==0) cout << curYear;
+                        else cout << monthName[curMonth][offset++];
                         break;
                     }case(5):{ // Moral
-                        if(offset==0)
+                        if(offset>2||strNum[0][offset]<'0'||strNum[0][offset]>'9')
+							cout << ' ';
+                        else if(offset==0)
                             cout << (curStats.moral>0 ? '+' : '-');
-                        else
-                            cout << curStats.moral%(10^(2-(offset++)));
+						else cout << strNum[0][offset++];
                         break;
                     }case(7):{ // Favor
-                        if(offset==0)
-                            cout << (curStats.favor>0 ? '+' : '-');
-                        else
-                            cout << curStats.favor%(10^(2-(offset++)));
+                        if(offset>2||strNum[1][offset]<'0'||strNum[1][offset]>'9')
+                            cout << ' ';
+                        else if(offset==0)
+							cout << (curStats.favor>0 ? '+' : '-');
+                    	else cout << strNum[1][offset++];
                         break;
                     }case(9):{ // Money
-                        if(offset==0)
+						if(offset>3||strNum[2][offset]<'0'||strNum[2][offset]>'9')
+							cout << ' ';
+						else if(offset==0)
                             cout << (curStats.money>0 ? '+' : '-');
-                        else
-                            cout << curStats.money%(10^(3-(offset++)));
+                        else cout << strNum[2][offset++];
                         break;
 					}case(13):{ // Monthly summary & advices
-						if(curStats.jailed) cout << monthAdvice[M_JAIL][j];
-						else if(curStats.emotion<emotionSwitchMonth) cout << monthAdvice[M_TIRED][j];
-						else if(curStats.money<moneySwitchMonth) cout << monthAdvice[M_POOR][j];
-						else cout << monthAdvice[M_NORMAL][j];
-						break;
+						char output;
+                        if(_kid.getStatus().jailed) output = monthAdvice[M_JAIL][offset++];
+                        else if(curStats.emotion<emotionSwitchMonth) output = monthAdvice[M_TIRED][offset++];
+                        else if(curStats.money<moneySwitchMonth) output = monthAdvice[M_POOR][offset++];
+                        else output = monthAdvice[M_NORMAL][offset++];
+
+                        if(output) cout << output;
+                        else cout << ' ';
+                        break;
                     } default:
                         cout << monthResult[i][j];
                 } // switch(i)
-            } // if(monthResult[i][j])
+            } else cout << monthResult[i][j];
 		} // for(j)
 		cout << endl;
     } // for(i)
@@ -125,12 +136,12 @@ bool RoundUI::talk(){
         case(1):{
             cout << "Your kid seems happy with your words!" << endl
                  << "Favor +5" << endl;
-            _kid.talk(true);
+            _tempStat.talk(true);
             return true;
         }case(2):{
             cout << "Your kid seems sad..." << endl
                  << "Favor -5" << endl;
-            _kid.talk(false);
+            _tempStat.talk(false);
             return true;
         }default:
             return false;
@@ -138,7 +149,7 @@ bool RoundUI::talk(){
 }
 
 
-bool RoundUI::plan(bool jailed){
+Work* RoundUI::plan(bool jailed){
 	PlanManager pManager;
 	vector<Work> allWorks = pManager.getWork();
 	Work* monthPlan = new Work[3];
@@ -173,14 +184,18 @@ bool RoundUI::plan(bool jailed){
 	cin >> numInput;
 	if(numInput==0)
 		return monthPlan; // In progress: Start working according to monthPlan(arr).
-					 // Remember to delete monthPlan whenever a month ends.
-	else if(numInput==1)
-		delete [] monthPlan;
-	return NULL; // Do plan() again.
+		        	      // Remember to delete monthPlan whenever a month ends.
+	else if(numInput==1){
+		for(int i=0;i<3;i++)
+			monthPlan[i] = {"Unknown",0,0};
+	}	
+	return monthPlan; // Do plan() again.
 }
 
-void RoundUI::work(){
-	
+void RoundUI::work(Work* plan){
+	for(int i=0;i<3;i++)
+		_tempStat.goToWork(_kid.getStatus().name,plan[i]);
+
 }
 
 void RoundUI::status(){

@@ -9,13 +9,15 @@ const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
 
 class RoundUI{
 	private:
-		Kid _kid;
+		Kid _kid{false};
+		Kid _tempStat{true};
 	public:
 		RoundUI(string name);
 		void round(int curYear,int curMonth);
 		void roundEnd(int curYear,int curMonth);
 		bool talk();
-		bool plan(bool jailed);
+		Work* plan(bool jailed);
+		void work(Work* plan);
 		void status();
 		void inventory();
 		void shop();
