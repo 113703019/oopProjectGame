@@ -36,6 +36,7 @@ void RoundUI::round(int curYear,int curMonth){
 
 	// 15% chance for economic boom.
 	// 15% chance for recession.
+	// 20% chance for gambling craze.
 	srand(time(NULL));
 	int randEvent = rand()%100;
 	if(_event.name!="None"&&_event.months<=0){ // Reset
@@ -49,6 +50,9 @@ void RoundUI::round(int curYear,int curMonth){
 		} else if(randEvent>=15&&randEvent<30){ // Recession
 			_event.name = "Recession";
 			_event.months = 3;
+		} else if(randEvent>=30&&randEvent<50){ // Gamble
+			_event.name = "Gamble";
+			_event.months = 1;
 		}
 	} else _event.months--;
 
@@ -63,9 +67,10 @@ void RoundUI::round(int curYear,int curMonth){
 
     	cout << endl << string(screenWidth,'-') << endl << endl; // Format
     	if(_event.months){
-			cout << _event.name << " is going on for " << _event.months << " months!" << endl;
+			cout << _event.name << " is going on for " << _event.months << (_event.months==1 ? " month!" :" months!") << endl;
 			if(_event.name=="Economic boom") cout << "All jobs pay more. Items will be more expensive." << endl << endl;
 			else if(_event.name=="Recession") cout << "All jobs pay less. Items will be cheaper." << endl << endl;
+			else if(_event.name=="Gamble") cout << "There's a temporary gamble option in the shop!" << endl << endl;
 		}
 		
 		for(int i=0;i<artHeight;i++){ // Sprite
@@ -422,10 +427,28 @@ bool RoundUI::shop(){
     else{
         for(int i=0;i<int(curShop.size());i++)
             cout << endl << '(' << i+1 << ") " << curShop[i].getInfo().name;
-        cout << endl << "(Q) Quit" << endl << endl;
+        cout << endl << "(Q) Quit" << (_event.name=="Gamble" ? "| (W) Gamble" : "") << endl << endl;
         char numInput;
         cin >> numInput;
         if(numInput=='Q') return true; // Quit
+		if(numInput=='W'){
+			cout << "Pay $100 -> 50\% $0 or 50\% $200!" << endl
+				 << "(0) Try | (1) Return" << endl << endl;
+			int numInput2;
+			cin >> numInput2;
+			if(numInput2==0){
+				srand(time(NULL));
+				int lucky = rand()%2;
+				_tempStat.buyItem(100);
+				cout << "Rolling..." << endl;
+				if(lucky){
+					cout << "Congrats!" << endl << "Money +200" << endl << endl;
+					_tempStat.buyItem(-200);
+				}else
+					cout << "Too bad..." << endl << "Good luck next time!" << endl << endl;
+			}
+			return false;
+		}
         numInput-='0';
         numInput--;
         if(numInput<=int(curShop.size())){
