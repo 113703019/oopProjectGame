@@ -35,6 +35,10 @@ void Kid::setName(string name){
 	_status.name = name;
 }
 
+void Kid::payFoodMoney(){
+	_status.money -= foodMoney;
+}
+
 void Kid::useItem(int emotion,int moral){
 	_status.emotion += emotion;
 	_status.moral += moral;
@@ -48,7 +52,7 @@ void Kid::goToWork(string name,Work work){
 		cout << name << " stayed in jail." << endl << endl;
 	}else if(curWork.name=="Rest"){
 		cout << name << " took some well deserved rest." << endl
-			 << "Emotion +25" << endl; // Currently, resting heals 25 emotion.
+			 << "Emotion +25" << endl << endl; // Currently, resting heals 25 emotion.
 		_status.emotion += 25; // Currently, resting heals 25 emotion.
 	}else{
 		cout << name << " worked as a " << curWork.name << "." << endl
@@ -73,7 +77,9 @@ const char statResult[resultHeight][resultWidth+1] = // The x's are placeholders
     "|                      |",
     "|  Favor         xxxx  |",
     "|                      |",
-    "|  Money         xxxx  |",
+    "|  Money         xxxx	|",
+	"|                      |",
+	"|  Emotion       xxxx  |",
     "|                      |",
     "|----------------------|",
     "|                      |",
@@ -88,11 +94,13 @@ const char monthResult[resultHeight][resultWidth+1] = // The x's are placeholder
     "|  Yearx xxx   Report  |",
     "|                      |",
     "|                      |",
-    "|  Moral          xxx  |",
+    "|  Moral         xxxx  |",
     "|                      |",
-    "|  Favor          xxx  |",
+    "|  Favor         xxxx  |",
     "|                      |",
     "|  Money         xxxx  |",
+	"|                      |",
+	"|  Emotion       xxxx  |",
     "|                      |",
     "|----------------------|",
     "|                      |",

@@ -34,6 +34,7 @@
 #include <iostream>
 #include <array>
 #include <string>
+#include <unistd.h>
 
 #include "Status.h"
 #include "RoundUI.h"
@@ -41,8 +42,6 @@
 #include "Work.h"
 using namespace std;
 
-Kid yourKid(false);
-ItemManager iManager;
 string playerName = "Player";
 enum endings {STARVE,GGG,BGG,GBG,GGB,BBG,BGB,GBB,BBB}; // MoralMoneyFavor
 
@@ -59,8 +58,7 @@ int endCoding(int money,int moral,int favor){
 	else return BBB;
 }
 
-void ending(int endCode){
-	string name = yourKid.getStatus().name;
+void ending(string name,int endCode){
 	switch(endCode){ // In progress: 9 endings based on moral, money and favor in order
 		case(STARVE):{ // Ending(0): Starved
 			cout << "The money wasn't enough to pay for " << name << "'s meals..." << endl
@@ -144,17 +142,20 @@ int main(){
 	string kidName;
 	cout << "Please enter your kid's name: ";
 	cin >> kidName;
-	yourKid.setName(kidName);
 	RoundUI ui(kidName);
 	cout << "Please enter how " << kidName << " should call you: ";
 	cin >> playerName;
 	for(int rnd=0;rnd<24;rnd++){
 		ui.round(rnd/12+1,rnd%12);
-		if(yourKid.getStatus().money < foodMoney) ending(STARVE);
-    	else ui.roundEnd(rnd/12+1,rnd%12);
+		if(ui.getKid().getStatus().money < foodMoney)
+			ending(kidName,STARVE);
+    	else{
+			ui.payFoodMoney();
+			ui.roundEnd(rnd/12+1,rnd%12);
+		}
 	}
-	StatStruct end = yourKid.getStatus();
+	StatStruct end = ui.getKid().getStatus();
 	int endCode = endCoding(end.moral,end.money,end.favor);
-	ending(endCode);
+	ending(kidName,endCode);
 	return 0;
 }

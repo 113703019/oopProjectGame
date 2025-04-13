@@ -7,6 +7,7 @@
 using namespace std;
 
 extern const char monthName[12][3+1];
+static const int foodMoney = 50; // Monthly expense. Essential to pay for survival.
 
 struct StatStruct{
 	string name;
@@ -28,6 +29,7 @@ class Kid{
 		void resetTemp();
 		void addValues(Kid& temp);
 		void talk(bool nice);
+		void payFoodMoney();
 		void useItem(int emotion,int moral);
 		void goToWork(string name,Work work);
 };
@@ -57,7 +59,7 @@ static const char kidTalkHate[3][31] = {
 	"The feeling's mutual, bastard."
 };
 
-static const int resultHeight = 16;
+static const int resultHeight = 18;
 static const int resultWidth = 24;
 
 enum monthAdvice {M_NORMAL,M_TIRED,M_POOR,M_JAIL};
