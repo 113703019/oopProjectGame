@@ -230,8 +230,23 @@ Work* RoundUI::plan(bool jailed){
 			//if(numInput=='Q'){ // Quit
 			//	monthPlan[2] = Work("Quit",0,0);
 			//	return monthPlan;
-			/*} else */if(numInput<=int(allWorks.size()))
-				monthPlan[planOffset++] = Work(allWorks[numInput]);
+			/*} else */
+			if(numInput<=int(allWorks.size())){
+				WorkStruct work = allWorks[numInput].getInfo();
+				cout << endl << work.name << endl;
+				if(work.name!="Rest")
+					cout << "Money +" << work.money << endl;
+				cout << "Emotion: " << (work.name=="Rest" ? "+25" : "-5") << endl; // Currently, all work minus emotion by 5.
+				if(work.moral!=0)
+					cout << "Moral: " << (work.moral>0 ? "+" : "") << work.moral;
+				cout << endl << "(0) Plan | (1) Return (Note: Currently, there's a bug where Return = Reset. Sorry for the inconvience!)" << endl;
+				int numInput2;
+				cin >> numInput2;
+				if(numInput2==0)
+					monthPlan[planOffset++] = Work(allWorks[numInput]);
+				else if(numInput2==1)
+					return monthPlan; // Do plan() again.
+			}
 		}
 	}
 
@@ -340,7 +355,7 @@ bool RoundUI::inventory(){
 		numInput--;
         if(numInput<=int(curPack.size())){
 			ItemStruct item = curPack[numInput].getInfo();
-			cout << item.name << endl
+			cout << endl << item.name << endl
 			     << item.desc << endl
 				 << "Emotion: +" << item.emotion << endl;
 			if(item.moral!=0)
@@ -376,7 +391,7 @@ bool RoundUI::shop(){
         numInput--;
         if(numInput<=int(curShop.size())){
             ItemStruct item = curShop[numInput].getInfo();
-            cout << item.name << endl
+            cout << endl << item.name << endl
                  << item.desc << endl
                  << "Emotion: +" << item.emotion << endl;
             if(item.moral!=0)
