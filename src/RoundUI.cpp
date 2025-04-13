@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unistd.h>
 
 #include "RoundUI.h"
 #include "Status.h"
@@ -20,8 +21,8 @@ void RoundUI::round(int curYear,int curMonth){
     else if(cur.moral<-50) kidState = BAD;
 	
 	char uiInput;
-	enum flag {TALK,INVEN};
-	bool flag[2] = {false};
+	enum flag {TALK,PLAN,INVEN};
+	bool flag[3] = {false};
 	_tempStat.resetTemp();
 	Work* monthPlan = new Work[3];
 	
@@ -49,11 +50,24 @@ void RoundUI::round(int curYear,int curMonth){
 				else flag[TALK] = talk(); // Talk with the kid.
 				break;
             } case('W'):{
-				do monthPlan = plan(cur.jailed);
-				while(monthPlan[2].getInfo().name=="Unknown");
-				work(monthPlan);
-				delete [] monthPlan;
-				monthEnd = true;
+				do{
+					// Note: cur.jailed stays 0, but plan() thinks kid is jailed anyway.
+					monthPlan = plan(cur.jailed);
+					string result = monthPlan[2].getInfo().name;
+					sleep(5); //debug
+
+					if(result=="Quit")
+						flag[PLAN] = true; // Quit
+					else if(result!="Unknown"){
+						 work(monthPlan); // Work
+						 monthEnd = true;
+						 flag[PLAN] = true;
+					}
+
+					delete [] monthPlan;
+				} while(!flag[PLAN]);
+
+				flag[PLAN] = false;
 				break;
             } case('E'):{
                 status();
@@ -177,8 +191,12 @@ Work* RoundUI::plan(bool jailed){
 				if(monthPlan[i].getInfo().name=="Unknown") cout << "(Nothing yet)" << endl;
 				else cout << monthPlan[i].getInfo().name << endl;
 			}
+			cout << endl << endl << "(Q) Quit" << endl << endl;
     		cin >> numInput;
-        	if(numInput<=int(allWorks.size()))
+			if(numInput=='Q'){ // Quit
+				monthPlan[2] = Work("Quit",0,0);
+				return monthPlan;
+			} else if(numInput<=int(allWorks.size()))
 				monthPlan[planOffset++] = Work(allWorks[numInput]);
 		}
 	}
@@ -187,14 +205,16 @@ Work* RoundUI::plan(bool jailed){
 	for(int i=0;i<3;i++)
 		cout << monthPlan[i].getInfo().name << endl;
 	cout << endl << "(0) Done | (1) Reset" << endl;
-	cin >> numInput;
-	if(numInput==0)
-		return monthPlan; // Start working according to monthPlan.
-	else if(numInput==1){
-		for(int i=0;i<3;i++)
-			monthPlan[i] = {"Unknown",0,0};
-	}	
-	return monthPlan; // Do plan() again.
+	do{
+		cin >> numInput;
+		if(numInput==0)
+			return monthPlan; // Start working according to monthPlan.
+		else if(numInput==1){
+			for(int i=0;i<3;i++)
+				monthPlan[i] = {"Unknown",0,0};
+			return monthPlan; // Do plan() again.
+		}
+	} while(true);
 }
 
 void RoundUI::work(Work* plan){
@@ -261,11 +281,12 @@ bool RoundUI::inventory(){
 	else{
 		for(int i=0;i<int(curPack.size());i++)
 			cout << endl << '(' << i+1 << ") " << curPack[i].getInfo().name;
-    	cout << endl << endl << "(Q) Quit" << endl << endl;
-		int numInput;
+    	cout << endl << "(Q) Quit" << endl << endl;
+		char numInput;
 		cin >> numInput;
 		if(numInput=='Q') return true;
-		else numInput--;
+		numInput-='0';
+		numInput--;
         if(numInput<=int(curPack.size())){
 			ItemStruct item = curPack[numInput].getInfo();
 			cout << item.name << endl
