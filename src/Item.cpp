@@ -42,6 +42,14 @@ ItemManager::ItemManager(){
 	_shopVec.emplace_back("Toy Knife","The shop owner found it in some ruins.",50,-5,10);
 }
 
+vector<Item> ItemManager::getInventory(){
+	return _inventoryVec;
+}
+
+vector<Item> ItemManager::getShop(){
+    return _shopVec;
+}
+
 Item* ItemManager::getInfoViaID(int id){
 	for(auto& item : _shopVec)
 		if(item.getInfo().itemID==id) return &item;

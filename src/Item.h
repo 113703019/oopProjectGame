@@ -35,7 +35,9 @@ class ItemManager{
 		vector<Item> _shopVec;
 	public:
 		ItemManager();
-
+		
+		vector<Item> getInventory();
+		vector<Item> getShop();
 		Item* getInfoViaID(int id);
 		void buyItem(int id);
 		void useItem(int id,Kid& kid);

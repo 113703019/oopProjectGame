@@ -4,6 +4,7 @@
 
 #include "RoundUI.h"
 #include "Status.h"
+#include "Item.h"
 #include "AsciiSprite.h"
 
 RoundUI::RoundUI(string name){
@@ -13,10 +14,10 @@ RoundUI::RoundUI(string name){
 void RoundUI::round(int curYear,int curMonth){
 
     StatStruct cur = _kid.getStatus();
-    int kidArt = NORMAL;
-    if(cur.emotion<50) kidArt = TIRED;
-    else if(cur.moral>50) kidArt = GOOD;
-    else if(cur.moral<-50) kidArt = BAD;
+    int kidState = NORMAL;
+    if(cur.emotion<50) kidState = TIRED;
+	else if(cur.moral>50) kidState = GOOD;
+    else if(cur.moral<-50) kidState = BAD;
 	
 	char uiInput;
 	bool talkFlag = false;
@@ -31,11 +32,11 @@ void RoundUI::round(int curYear,int curMonth){
             	if(j<artOffset)
                 	cout << ' ';
             	else
-                	cout << asciiArt[kidArt][i][j-artOffset];
+                	cout << asciiArt[kidState][i][j-artOffset];
         	}
 	        cout << endl;
     	}
-	    cout << endl << cur.name << ": \"Hello! What should I do this month?\"" << endl << endl // Temporary script
+		cout << endl << kidScript[kidState] << endl << endl // Monthly script
     	     << "Year" << curYear << ' ' << monthName[curMonth] << ' ' << string((screenWidth-8/*Year&Month*/-4/*' '*2+" $"*/-to_string(cur.money).length()),'-') << " $" << cur.money << endl // Status
          	 << "(Q) Talk | (W) Plan The Month | (E) Status | (R) Inventory | (T) Shop" << endl // UI instructions
 	         << string(screenWidth,'-') << endl; // Format
@@ -44,7 +45,7 @@ void RoundUI::round(int curYear,int curMonth){
         switch(uiInput){
             case('Q'):{
 				if(talkFlag) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
-				else talkFlag = talk(); // Talk with the kid. Response varies depending on moral & emotion.
+				else talkFlag = talk(); // Talk with the kid.
 				break;
             } case('W'):{
 				do monthPlan = plan(cur.jailed);
@@ -57,7 +58,7 @@ void RoundUI::round(int curYear,int curMonth){
                 status();
                 break;
             } case('R'):{
-                // In progress: inventory() - Shows the inventory and allows using items.
+                inventory();
                 break;
             } case('T'):{
                 // In progress: shop() - Shows the shop and allows buying items
@@ -70,7 +71,7 @@ void RoundUI::round(int curYear,int curMonth){
 	roundEnd(curYear,curMonth);
 }
 
-void RoundUI::roundEnd(int curYear,int curMonth){
+void RoundUI::roundEnd(int curYear,int curMonth){ // In progress: This shit's so broken. Fix it.
     StatStruct curStats = _tempStat.getStatus();
 	int offset = 0;
 	string strNum[3] = {to_string(curStats.moral),to_string(curStats.favor),to_string(curStats.money)};
@@ -92,21 +93,21 @@ void RoundUI::roundEnd(int curYear,int curMonth){
                         if(offset>2||strNum[0][offset]<'0'||strNum[0][offset]>'9')
 							cout << ' ';
                         else if(offset==0)
-                            cout << (curStats.moral>0 ? '+' : '-');
+                            cout << (curStats.moral>0 ? "+" : "");
 						else cout << strNum[0][offset++];
                         break;
                     }case(7):{ // Favor
                         if(offset>2||strNum[1][offset]<'0'||strNum[1][offset]>'9')
                             cout << ' ';
                         else if(offset==0)
-							cout << (curStats.favor>0 ? '+' : '-');
+							cout << (curStats.favor>0 ? "+" : "");
                     	else cout << strNum[1][offset++];
                         break;
                     }case(9):{ // Money
 						if(offset>3||strNum[2][offset]<'0'||strNum[2][offset]>'9')
 							cout << ' ';
 						else if(offset==0)
-                            cout << (curStats.money>0 ? '+' : '-');
+                            cout << (curStats.money>0 ? "+" : "");
                         else cout << strNum[2][offset++];
                         break;
 					}case(13):{ // Monthly summary & advices
@@ -130,16 +131,20 @@ void RoundUI::roundEnd(int curYear,int curMonth){
 
 bool RoundUI::talk(){
     cout << "(1) I love you. | (2) I hate you." << endl;
+	int kidFavor = T_NORMAL;
+	if(_kid.getStatus().favor>50) kidFavor = T_LOVE;
+	else if(_kid.getStatus().favor<-50) kidFavor = T_HATE;
+
 	int numInput;
     cin >> numInput;
     switch(numInput){
         case(1):{
-            cout << "Your kid seems happy with your words!" << endl
+            cout << kidTalkLove[kidFavor] << endl
                  << "Favor +5" << endl;
             _tempStat.talk(true);
             return true;
         }case(2):{
-            cout << "Your kid seems sad..." << endl
+            cout << kidTalkHate[kidFavor] << endl
                  << "Favor -5" << endl;
             _tempStat.talk(false);
             return true;
@@ -183,8 +188,7 @@ Work* RoundUI::plan(bool jailed){
 	cout << endl << "(0) Done | (1) Reset" << endl;
 	cin >> numInput;
 	if(numInput==0)
-		return monthPlan; // In progress: Start working according to monthPlan(arr).
-		        	      // Remember to delete monthPlan whenever a month ends.
+		return monthPlan; // Start working according to monthPlan.
 	else if(numInput==1){
 		for(int i=0;i<3;i++)
 			monthPlan[i] = {"Unknown",0,0};
@@ -247,7 +251,13 @@ void RoundUI::status(){
 }
 
 void RoundUI::inventory(){
-
+	// Show inventory and UI
+	ItemManager iManager;
+	vector<Item> curPack = iManager.getInventory();
+	cout << "Inventory" << endl << endl;
+	for(int i=0;i<int(curPack.size());i++){
+		cout << endl << '(' << i << ") " << curPack[i].getInfo().name;
+	}
 }
 
 void RoundUI::shop(){

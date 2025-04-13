@@ -52,7 +52,7 @@ void Kid::goToWork(string name,Work work){
 		_status.emotion += 25; // Currently, resting heals 25 emotion.
 	}else{
 		cout << name << " worked as a " << curWork.name << "." << endl
-			 << "Moral " << (curWork.moral>0 ? '+' : '-') << curWork.moral << endl
+			 << "Moral " << (curWork.moral>0 ? "+" : "") << curWork.moral << endl
 			 << "Money +" << curWork.money << endl
 			 << "Emotion -5" << endl << endl; // Currently, every work causes -5 emotion.
     	_status.moral += curWork.moral;
