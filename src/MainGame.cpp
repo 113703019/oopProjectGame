@@ -138,6 +138,13 @@ void ending(string name,int endCode){
 }
 
 int main(){
+	// Instructions
+	cout << "The game lasts for 2 years." << endl
+		 << "Plan works for your kid, for them to earn money to survive." << endl
+		 << "Keep an eye out for the kid's status..." << endl
+		 << "...and choose your actions wisely." << endl
+		 << "The ending varies based on all the values aside from emotion." << endl
+		 << "Good luck!" << endl << endl;
 	// Game start
 	string kidName;
 	cout << "Please enter your kid's name: ";
