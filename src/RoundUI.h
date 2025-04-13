@@ -24,6 +24,7 @@ class RoundUI{
 		void status();
 		bool inventory();
 		bool shop();
+		void bribe();
 };
 
 #endif

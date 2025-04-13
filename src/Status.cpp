@@ -69,12 +69,21 @@ void Kid::goToWork(string name,Work work){
 			int risk = rand()%100;
 			if(risk+curWork.moral<=0){ // Go to jail
 				_status.jailed += curWork.moral*(-1)/10;
-				cout << endl << "A police found " << name << " suspicious!" << endl
+				cout << "A police found " << name << " suspicious!" << endl
 					 << name << " will be jailed for the next " << curWork.moral*(-1)/10 << " months..." << endl << endl;
 			} else // Safe for now
-				cout << endl << "Luckily, " << name << " didn't attract any police." << endl << endl;
+				cout << "Luckily, " << name << " didn't attract any police." << endl << endl;
 		}
 	}
+}
+
+void Kid::stayInJail(){
+	_status.jailed--;
+}
+
+void Kid::outOfJail(){
+	_status.money -= _status.jailed*100;
+	_status.jailed = 0;
 }
 
 const char monthName[12][3+1] = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};

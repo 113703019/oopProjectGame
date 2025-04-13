@@ -4,7 +4,7 @@
 const int kidSprites = 4;
 const int artHeight = 6;
 const int artWidth = 12;
-enum kidSprite {NORMAL,GOOD,BAD,TIRED};
+enum kidState {NORMAL,GOOD,BAD,TIRED,JAIL};
 
 const char asciiArt[kidSprites][artHeight][artWidth+1] = {{
 	" /````````\\ ",

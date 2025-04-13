@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <unistd.h>
+#include <cmath>
 
 #include "RoundUI.h"
 #include "Status.h"
@@ -26,12 +27,6 @@ void RoundUI::payFoodMoney(){
 
 void RoundUI::round(int curYear,int curMonth){
 
-    StatStruct cur = _kid.getStatus();
-    int kidState = NORMAL;
-    if(cur.emotion<emotionSwitchMonth) kidState = TIRED;
-	else if(cur.moral>50) kidState = GOOD;
-    else if(cur.moral<-50) kidState = BAD;
-	
 	char uiInput;
 	enum flag {TALK,PLAN,INVEN,SHOP};
 	bool flag[4] = {false};
@@ -40,20 +35,28 @@ void RoundUI::round(int curYear,int curMonth){
 
 	bool monthEnd = false;
 	do{
+		StatStruct cur = _kid.getStatus();
+		int kidState = NORMAL;
+		if(cur.jailed) kidState = JAIL;
+		else if(cur.emotion<emotionSwitchMonth) kidState = TIRED;
+		else if(cur.moral>50) kidState = GOOD;
+		else if(cur.moral<-50) kidState = BAD;
+
     	cout << endl << string(screenWidth,'-') << endl << endl; // Format
     	for(int i=0;i<artHeight;i++){ // Sprite
         	for(int j=0;j<(artOffset+artWidth);j++){
             	if(j<artOffset)
                 	cout << ' ';
             	else
-                	cout << asciiArt[kidState][i][j-artOffset];
+                	cout << asciiArt[(kidState==JAIL ? TIRED : kidState)][i][j-artOffset];
         	}
 	        cout << endl;
     	}
 		cout << endl << kidScript[kidState] << endl << endl // Monthly script
     	     << "Year" << curYear << ' ' << monthName[curMonth] << ' ' << string((screenWidth-8/*Year&Month*/-4/*' '*2+" $"*/-to_string(cur.money).length()),'-') << " $" << cur.money << endl // Status
-         	 << "(Q) Talk | (W) Plan The Month | (E) Status | (R) Inventory | (T) Shop" << endl // UI instructions
-	         << string(screenWidth,'-') << endl; // Format
+         	 << "(Q) Talk | (W) Plan The Month | (E) Status | (R) Inventory | (T) Shop" << endl; // UI instructions
+		if(cur.jailed) cout << "(A) Bribe" << endl;
+	    cout << string(screenWidth,'-') << endl; // Format
     	cin >> uiInput;
         if(uiInput>90) uiInput-=32; // Uppercase
         switch(uiInput){
@@ -93,21 +96,24 @@ void RoundUI::round(int curYear,int curMonth){
 				while(!flag[SHOP]);
 				flag[SHOP] = false;
                 break;
+			} case('A'):{
+				bribe();
+				break;
             } default:
                 continue;
         }
     } while(!monthEnd);
 }
 
-void RoundUI::roundEnd(int curYear,int curMonth){ // In progress: This shit's so broken. Fix it.
+void RoundUI::roundEnd(int curYear,int curMonth){
     StatStruct curStats = _tempStat.getStatus();
 	int offset = 0;
 	bool flag = false;
 	string strNum[4] = {
-		to_string(curStats.moral),
-		to_string(curStats.favor),
-		to_string(curStats.money),
-		to_string(curStats.emotion),};
+		to_string(abs(curStats.moral)),
+		to_string(abs(curStats.favor)),
+		to_string(abs(curStats.money)),
+		to_string(abs(curStats.emotion))};
 
 	// Add the temp values to the main values.
 	_kid.addValues(_tempStat);
@@ -130,32 +136,32 @@ void RoundUI::roundEnd(int curYear,int curMonth){ // In progress: This shit's so
                     }case(5):{ // Moral
                         if(offset>3||strNum[0][offset]<'0'||strNum[0][offset]>'9')
 							cout << ' ';
-                        else if(!flag && curStats.moral>0){
-							cout << '+';
+                        else if(!flag){
+							cout << (curStats.moral>=0 ? '+' : '-');
 							flag = true;
 						} else cout << strNum[0][offset++];
 						break;
                     }case(7):{ // Favor
-                        if(offset>4||strNum[1][offset]<'0'||strNum[1][offset]>'9')
+                        if(offset>3||strNum[1][offset]<'0'||strNum[1][offset]>'9')
                             cout << ' ';
-                        else if(!flag && curStats.favor>0){
-						   	cout << '+';
+                        else if(!flag){
+						   	cout << (curStats.favor>=0 ? '+' : '-');
 							flag = true;
 						} else cout << strNum[1][offset++];
 						break;
                     }case(9):{ // Money
-						if(offset>4||strNum[2][offset]<'0'||strNum[2][offset]>'9')
+						if(offset>3||strNum[2][offset]<'0'||strNum[2][offset]>'9')
 							cout << ' ';
-						else if(!flag && curStats.money>0){
-							cout << '+';
+						else if(!flag){
+							cout << (curStats.money>=0 ? '+' : '-');
 							flag = true;
 						} else cout << strNum[2][offset++];
                         break;
 					}case(11):{ // Emotion
-						if(offset>4||strNum[3][offset]<'0'||strNum[3][offset]>'9')
+						if(offset>3||strNum[3][offset]<'0'||strNum[3][offset]>'9')
 							cout << ' ';
-						else if(!flag && curStats.emotion>0){
-							cout << '+';
+						else if(!flag){
+							cout << (curStats.emotion>=0 ? '+' : '-');
 							flag = true;
 						} else cout << strNum[3][offset++];
 						break;
@@ -269,6 +275,9 @@ Work* RoundUI::plan(bool jailed){
 
 void RoundUI::work(Work* plan){
 	cout << endl << string(screenWidth,'-') << endl << endl; // Format
+	// If the kid is in jail, you don't have to pay for food.
+	if(_kid.getStatus().jailed) _kid.stayInJail();
+	else cout << "Food money for the month" << endl << "Money -50" << endl << endl;
 	for(int i=0;i<3;i++){
 		_tempStat.goToWork(_kid.getStatus().name,plan[i]);
 		sleep(1);
@@ -300,22 +309,22 @@ void RoundUI::status(){
 							cout << curStats.name[offset++];
                         break;
                     }case(5):{ // Moral
-						if(offset>4||strNum[0][offset]<'0'||strNum[0][offset]>'9')
+						if(offset>4||((strNum[0][offset]<'0'||strNum[0][offset]>'9')&&strNum[0][offset]!='-'))
 							cout << ' ';
 						else cout << strNum[0][offset++];
                         break;
                     }case(7):{ // Favor
-                        if(offset>4||strNum[1][offset]<'0'||strNum[1][offset]>'9')
+                        if(offset>4||((strNum[1][offset]<'0'||strNum[1][offset]>'9')&&strNum[1][offset]!='-'))
 							cout << ' ';
 						else cout << strNum[1][offset++];
                         break;
-                    }case(9):{ // Money
-                        if(offset>4||strNum[2][offset]<'0'||strNum[2][offset]>'9')
+                    }case(9):{ // Money // Note: Slight offset
+                        if(offset>4||((strNum[2][offset]<'0'||strNum[2][offset]>'9')&&strNum[2][offset]!='-'))
 							cout << ' ';
 						else cout << strNum[2][offset++];
                         break;
 					}case(11):{ // Emotion
-						if(offset>4||strNum[3][offset]<'0'||strNum[2][offset]>'9')
+						if(offset>4||((strNum[3][offset]<'0'||strNum[3][offset]>'9')&&strNum[3][offset]!='-'))
 							cout << ' ';
 						else cout << strNum[3][offset++];
 						break;
@@ -408,4 +417,21 @@ bool RoundUI::shop(){
                 return false; // Do shop() again.
         }
     } return true;
+}
+
+void RoundUI::bribe(){
+	StatStruct cur = _kid.getStatus();
+	cout << "You can choose to pay $" << cur.jailed*100 << " to immediately bring " << cur.name << " home." << endl
+		 << endl << "(0) Pay | (1) Return" << endl << endl;
+	int numInput;
+	cin >> numInput;
+	if(numInput==0){
+		if(cur.money<cur.jailed*100)
+			cout << "You don't have enough money." << endl << endl;
+		else{
+			_kid.outOfJail();
+			cout << cur.name << " is no longer being jailed." << endl << endl;
+		}
+	}
+	return;
 }

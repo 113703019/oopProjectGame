@@ -32,6 +32,8 @@ class Kid{
 		void payFoodMoney();
 		void useItem(int emotion,int moral);
 		void goToWork(string name,Work work);
+		void stayInJail();
+		void outOfJail();
 };
 
 static const int moneySwitch = 500; // < switch: Bad, > switch: Good
@@ -40,11 +42,12 @@ static const int favorSwitch = 0; // Favor: -100 ~ 100
 static const int emotionSwitchMonth = 20; // Emotion: 0 ~ 100
 static const int moneySwitchMonth = 100; // -50 each month
 
-static const char kidScript[4][46] = {
+static const char kidScript[5][47] = {
 	"Hello! What should I do this month?",
 	"I will work hard for this month too!",
 	"...For real, why should I behave?",
 	"Nooo... I don't wanna work...",
+	"How much longer do I have to be here?"
 };
 
 enum kidTalk {T_NORMAL,T_LOVE,T_HATE,T_JAIL};
