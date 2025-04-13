@@ -28,7 +28,10 @@ void Kid::addValues(Kid& temp){
 
 void Kid::talk(bool nice){
 	int niceInt = nice ? 1 : -1;
-	_status.favor += niceInt*5;
+	srand(time(NULL));
+	int randFavor = niceInt*(rand()%5+1);
+	_status.favor += randFavor;
+	cout << "Favor " << (randFavor>0 ? '+' : '-') << (randFavor>0 ? randFavor : randFavor*(-1)) << endl;
 }
 
 void Kid::setName(string name){

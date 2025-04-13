@@ -195,13 +195,11 @@ bool RoundUI::talk(){
     cin >> numInput;
     switch(numInput){
         case(1):{
-            cout << kidTalkLove[kidFavor] << endl
-                 << "Favor +5" << endl;
+            cout << kidTalkLove[kidFavor] << endl;
             _tempStat.talk(true);
             return true;
         }case(2):{
-            cout << kidTalkHate[kidFavor] << endl
-                 << "Favor -5" << endl;
+            cout << kidTalkHate[kidFavor] << endl;
             _tempStat.talk(false);
             return true;
         }default:
@@ -375,7 +373,9 @@ bool RoundUI::inventory(){
 			cin >> numInput2;
 			if(numInput2==0){
 				iManager.useItem(numInput,_tempStat);
-				cout << "Used " << item.name << "!" << endl;
+				cout << "Used " << item.name << "!" << endl
+					 << _kid.getStatus().name << " appreciate your gift." << endl
+					 << "Favor +5" << endl; // Currently, every gift raises favor by 5.
 				return true; // Done.
 			}else if(numInput2==1)
 				return false; // Do inventory() again.
