@@ -23,7 +23,7 @@ class RoundUI{
 		void work(Work* plan);
 		void status();
 		bool inventory();
-		void shop();
+		bool shop();
 };
 
 #endif

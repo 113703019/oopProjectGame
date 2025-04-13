@@ -33,8 +33,8 @@ void RoundUI::round(int curYear,int curMonth){
     else if(cur.moral<-50) kidState = BAD;
 	
 	char uiInput;
-	enum flag {TALK,PLAN,INVEN};
-	bool flag[3] = {false};
+	enum flag {TALK,PLAN,INVEN,SHOP};
+	bool flag[4] = {false};
 	_tempStat.resetTemp();
 	Work* monthPlan = new Work[3];
 
@@ -89,7 +89,9 @@ void RoundUI::round(int curYear,int curMonth){
 				flag[INVEN] = false;
                 break;
             } case('T'):{
-                // In progress: shop() - Shows the shop and allows buying items
+                do flag[SHOP] = shop();
+				while(!flag[SHOP]);
+				flag[SHOP] = false;
                 break;
             } default:
                 continue;
@@ -333,7 +335,7 @@ bool RoundUI::inventory(){
     	cout << endl << "(Q) Quit" << endl << endl;
 		char numInput;
 		cin >> numInput;
-		if(numInput=='Q') return true;
+		if(numInput=='Q') return true; // Quit
 		numInput-='0';
 		numInput--;
         if(numInput<=int(curPack.size())){
@@ -356,6 +358,38 @@ bool RoundUI::inventory(){
 	} return true;
 }
 
-void RoundUI::shop(){
-
+bool RoundUI::shop(){
+    // Show shop and UI
+    ItemManager iManager;
+    vector<Item> curShop = iManager.getShop();
+    cout << endl << string(screenWidth,'-') << endl << endl // Format
+         << "Shop" << endl;
+    if(curShop.empty()) cout << endl << "Nothing in shop!";
+    else{
+        for(int i=0;i<int(curShop.size());i++)
+            cout << endl << '(' << i+1 << ") " << curShop[i].getInfo().name;
+        cout << endl << "(Q) Quit" << endl << endl;
+        char numInput;
+        cin >> numInput;
+        if(numInput=='Q') return true; // Quit
+        numInput-='0';
+        numInput--;
+        if(numInput<=int(curShop.size())){
+            ItemStruct item = curShop[numInput].getInfo();
+            cout << item.name << endl
+                 << item.desc << endl
+                 << "Emotion: +" << item.emotion << endl;
+            if(item.moral!=0)
+                cout << "Moral: " << (item.moral>0 ? "+" : "") << item.moral;
+            cout << endl << "(0) Buy | (1) Return" << endl;
+            int numInput2;
+            cin >> numInput2;
+            if(numInput2==0){
+                iManager.buyItem(numInput);
+                 cout << "Bought " << item.name << "!" << endl;
+                return true; // Done.
+            }else if(numInput2==1)
+                return false; // Do shop() again.
+        }
+    } return true;
 }
