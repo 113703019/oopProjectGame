@@ -6,10 +6,16 @@
 const int screenWidth = 69; // For UI formatting.
 const int artOffset = 30; // For UI formatting.
 
+struct EventStruct{
+	string name;
+	int months;
+};
+
 class RoundUI{
 	private:
 		Kid _kid{false};
 		Kid _tempStat{true};
+		EventStruct _event;
 	public:
 		RoundUI(string name);
 		Kid getKid();

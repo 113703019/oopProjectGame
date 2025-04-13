@@ -39,7 +39,7 @@ class ItemManager{
 		vector<Item> getInventory();
 		vector<Item> getShop();
 		Item* getInfoViaID(int id);
-		void buyItem(int id);
+		void buyItem(int id,Kid& kid,string event);
 		void useItem(int id,Kid& kid);
 };
 

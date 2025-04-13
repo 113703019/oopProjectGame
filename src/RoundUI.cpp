@@ -9,7 +9,8 @@
 #include "Item.h"
 #include "AsciiSprite.h"
 
-RoundUI::RoundUI(string name){
+RoundUI::RoundUI(string name)
+	:_event{"None",0}{
 	_kid.setName(name);
 }
 
@@ -33,6 +34,24 @@ void RoundUI::round(int curYear,int curMonth){
 	_tempStat.resetTemp();
 	Work* monthPlan = new Work[3];
 
+	// 15% chance for economic boom.
+	// 15% chance for recession.
+	srand(time(NULL));
+	int randEvent = rand()%100;
+	if(_event.name!="None"&&_event.months<=0){ // Reset
+		_event.name = "None";
+		_event.months = 0;
+	}
+	if(_event.name=="None"){
+		if(randEvent>=0&&randEvent<15){ // Economic boom
+			_event.name = "Economic boom";
+			_event.months = 3;	
+		} else if(randEvent>=15&&randEvent<30){ // Recession
+			_event.name = "Recession";
+			_event.months = 3;
+		}
+	} else _event.months--;
+
 	bool monthEnd = false;
 	do{
 		StatStruct cur = _kid.getStatus();
@@ -43,7 +62,13 @@ void RoundUI::round(int curYear,int curMonth){
 		else if(cur.moral<-50) kidState = BAD;
 
     	cout << endl << string(screenWidth,'-') << endl << endl; // Format
-    	for(int i=0;i<artHeight;i++){ // Sprite
+    	if(_event.months){
+			cout << _event.name << " is going on for " << _event.months << " months!" << endl;
+			if(_event.name=="Economic boom") cout << "All jobs pay more. Items will be more expensive." << endl << endl;
+			else if(_event.name=="Recession") cout << "All jobs pay less. Items will be cheaper." << endl << endl;
+		}
+		
+		for(int i=0;i<artHeight;i++){ // Sprite
         	for(int j=0;j<(artOffset+artWidth);j++){
             	if(j<artOffset)
                 	cout << ' ';
@@ -101,7 +126,7 @@ void RoundUI::round(int curYear,int curMonth){
 				break;
             } default:
                 continue;
-        }
+        } // switch(uiInput)
     } while(!monthEnd);
 }
 
@@ -239,8 +264,12 @@ Work* RoundUI::plan(bool jailed){
 			if(numInput<=int(allWorks.size())){
 				WorkStruct work = allWorks[numInput].getInfo();
 				cout << endl << work.name << endl;
-				if(work.name!="Rest")
-					cout << "Money +" << work.money << endl;
+				if(work.name!="Rest"){
+					cout << "Money +";
+					if(_event.name=="Economic boom") cout << work.money*1.25 << endl;
+					else if(_event.name=="Recession") cout << work.money*0.75 << endl;
+					else cout << "Money +" << work.money << endl;
+				}
 				cout << "Emotion: " << (work.name=="Rest" ? "+25" : "-5") << endl; // Currently, all work minus emotion by 5.
 				if(work.moral!=0)
 					cout << "Moral: " << (work.moral>0 ? "+" : "") << work.moral;
@@ -277,7 +306,7 @@ void RoundUI::work(Work* plan){
 	if(_kid.getStatus().jailed) _kid.stayInJail();
 	else cout << "Food money for the month" << endl << "Money -50" << endl << endl;
 	for(int i=0;i<3;i++){
-		_tempStat.goToWork(_kid.getStatus().name,plan[i]);
+		_tempStat.goToWork(_kid.getStatus().name,plan[i],_event.name);
 		sleep(1);
 	}
 }
@@ -405,12 +434,15 @@ bool RoundUI::shop(){
                  << item.desc << endl
                  << "Emotion: +" << item.emotion << endl;
             if(item.moral!=0)
-                cout << "Moral: " << (item.moral>0 ? "+" : "") << item.moral;
+                cout << "Moral: " << (item.moral>0 ? "+" : "") << item.moral << endl;
+			cout << "Cost $";
+			if(_event.name=="Economic boom") cout << item.money*1.25 << endl;
+			else if(_event.name=="Recession") cout << item.money*0.75 << endl;
             cout << endl << "(0) Buy | (1) Return" << endl;
             int numInput2;
             cin >> numInput2;
             if(numInput2==0){
-                iManager.buyItem(numInput);
+                 iManager.buyItem(numInput,_tempStat,_event.name);
                  cout << "Bought " << item.name << "!" << endl;
                 return true; // Done.
             }else if(numInput2==1)

@@ -42,13 +42,17 @@ void Kid::payFoodMoney(){
 	_status.money -= foodMoney;
 }
 
+void Kid::buyItem(int money){
+	_status.money -= money;
+}
+
 void Kid::useItem(int emotion,int moral){
 	_status.emotion += emotion;
 	_status.moral += moral;
 	_status.favor += 5; // Currently, letting your kid use the gift you bought raises favor by 5.
 }
 
-void Kid::goToWork(string name,Work work){
+void Kid::goToWork(string name,Work work,string event){
 	WorkStruct curWork = work.getInfo();
 	
 	if(curWork.name=="Jail"){
@@ -59,9 +63,11 @@ void Kid::goToWork(string name,Work work){
 		_status.emotion += 25; // Currently, resting heals 25 emotion.
 	}else{
 		cout << name << " worked as a " << curWork.name << "." << endl
-			 << "Moral " << (curWork.moral>0 ? "+" : "") << curWork.moral << endl
-			 << "Money +" << curWork.money << endl
-			 << "Emotion -5" << endl << endl; // Currently, every work causes -5 emotion.
+			 << "Moral " << (curWork.moral>0 ? "+" : "") << curWork.moral << endl;
+		if(event=="Economic boom") cout << "Money +" << curWork.money*1.25 << endl;
+		else if(event=="Recession") cout << "Money +" << curWork.money*0.75 << endl;
+		else cout << "Money +" << curWork.money << endl;
+		cout << "Emotion -5" << endl << endl; // Currently, every work causes -5 emotion.
     	_status.moral += curWork.moral;
 		_status.money += curWork.money;
     	_status.emotion -= 5; // Currently, every work causes -5 emotion.

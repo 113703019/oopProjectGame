@@ -30,8 +30,9 @@ class Kid{
 		void addValues(Kid& temp);
 		void talk(bool nice);
 		void payFoodMoney();
+		void buyItem(int money);
 		void useItem(int emotion,int moral);
-		void goToWork(string name,Work work);
+		void goToWork(string name,Work work,string event);
 		void stayInJail();
 		void outOfJail();
 };

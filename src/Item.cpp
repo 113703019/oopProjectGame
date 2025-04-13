@@ -56,14 +56,18 @@ Item* ItemManager::getInfoViaID(int id){
 	return nullptr;
 }
 
-void ItemManager::buyItem(int id){
+void ItemManager::buyItem(int id,Kid& kid,string event){
    	// Technically, I could just pass an item...
 	// Though, I want to implement copying somewhere somehow.
 	Item* result = getInfoViaID(id);
 	if(result==nullptr)
 		cout << "No such item in shop!" << endl;
-	else
+	else{
 		_inventoryVec.push_back(*result);
+		if(event=="Economic boom") kid.buyItem(result->getInfo().money*1.25);
+		else if(event=="Recession") kid.buyItem(result->getInfo().money*0.75);
+		else kid.buyItem(result->getInfo().money);
+	}
 }
 
 void ItemManager::useItem(int id,Kid& kid){
