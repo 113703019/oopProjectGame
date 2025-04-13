@@ -36,6 +36,7 @@ PlanManager::PlanManager(){
 	_workVec.emplace_back("Thief",-10,200);
 	_workVec.emplace_back("Robber",-25,450);
 	_workVec.emplace_back("Drug dealer",-60,1500);
+	_workVec.emplace_back("Fucking kill a police",-100,0); //debug
 }
 
 vector<Work> PlanManager::getWork(){

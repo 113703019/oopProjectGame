@@ -28,7 +28,7 @@ void RoundUI::round(int curYear,int curMonth){
 
     StatStruct cur = _kid.getStatus();
     int kidState = NORMAL;
-    if(cur.emotion<50) kidState = TIRED;
+    if(cur.emotion<emotionSwitchMonth) kidState = TIRED;
 	else if(cur.moral>50) kidState = GOOD;
     else if(cur.moral<-50) kidState = BAD;
 	
@@ -181,7 +181,8 @@ void RoundUI::roundEnd(int curYear,int curMonth){ // In progress: This shit's so
 bool RoundUI::talk(){
     cout << "(1) I love you. | (2) I hate you." << endl;
 	int kidFavor = T_NORMAL;
-	if(_kid.getStatus().favor>50) kidFavor = T_LOVE;
+	if(_kid.getStatus().jailed) kidFavor = T_JAIL;
+	else if(_kid.getStatus().favor>50) kidFavor = T_LOVE;
 	else if(_kid.getStatus().favor<-50) kidFavor = T_HATE;
 
 	int numInput;
@@ -239,7 +240,7 @@ Work* RoundUI::plan(bool jailed){
 				cout << "Emotion: " << (work.name=="Rest" ? "+25" : "-5") << endl; // Currently, all work minus emotion by 5.
 				if(work.moral!=0)
 					cout << "Moral: " << (work.moral>0 ? "+" : "") << work.moral;
-				cout << endl << "(0) Plan | (1) Return (Note: Currently, there's a bug where Return = Reset. Sorry for the inconvience!)" << endl;
+				cout << endl << "(0) Plan | (1) Return & Reset" << endl; // In progress: Fix return.
 				int numInput2;
 				cin >> numInput2;
 				if(numInput2==0)
