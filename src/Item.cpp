@@ -34,6 +34,7 @@ ItemStruct Item::getInfo(){
 ItemManager::ItemManager(){
 	// Add default inventory items here
 	// _inventoryVec.emplace_back(name,des,money,moral,emotion);
+	_inventoryVec.emplace_back("Doll","Cute and fluffy.",50,5,10);
 
 	// Add shop items here
 	// _shopVec.emplace_back(name,des,money,moral,emotion);

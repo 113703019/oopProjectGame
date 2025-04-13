@@ -20,7 +20,8 @@ void RoundUI::round(int curYear,int curMonth){
     else if(cur.moral<-50) kidState = BAD;
 	
 	char uiInput;
-	bool talkFlag = false;
+	enum flag {TALK,INVEN};
+	bool flag[2] = {false};
 	_tempStat.resetTemp();
 	Work* monthPlan = new Work[3];
 	
@@ -44,8 +45,8 @@ void RoundUI::round(int curYear,int curMonth){
         if(uiInput>90) uiInput-=32; // Uppercase
         switch(uiInput){
             case('Q'):{
-				if(talkFlag) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
-				else talkFlag = talk(); // Talk with the kid.
+				if(flag[TALK]) cout << endl << "You already talked with " << cur.name << " this month." << endl << endl;
+				else flag[TALK] = talk(); // Talk with the kid.
 				break;
             } case('W'):{
 				do monthPlan = plan(cur.jailed);
@@ -58,7 +59,9 @@ void RoundUI::round(int curYear,int curMonth){
                 status();
                 break;
             } case('R'):{
-                inventory();
+                do flag[INVEN] = inventory();
+				while(!flag[INVEN]);
+				flag[INVEN] = false;
                 break;
             } case('T'):{
                 // In progress: shop() - Shows the shop and allows buying items
@@ -67,8 +70,6 @@ void RoundUI::round(int curYear,int curMonth){
                 continue;
         }
     } while(!monthEnd);
-
-	roundEnd(curYear,curMonth);
 }
 
 void RoundUI::roundEnd(int curYear,int curMonth){ // In progress: This shit's so broken. Fix it.
@@ -250,14 +251,39 @@ void RoundUI::status(){
     } // for(i)	
 }
 
-void RoundUI::inventory(){
+bool RoundUI::inventory(){
 	// Show inventory and UI
 	ItemManager iManager;
 	vector<Item> curPack = iManager.getInventory();
-	cout << "Inventory" << endl << endl;
-	for(int i=0;i<int(curPack.size());i++){
-		cout << endl << '(' << i << ") " << curPack[i].getInfo().name;
-	}
+	cout << endl << string(screenWidth,'-') << endl << endl // Format
+		 << "Inventory" << endl;
+	if(curPack.empty()) cout << endl << "Nothing in inventory!";
+	else{
+		for(int i=0;i<int(curPack.size());i++)
+			cout << endl << '(' << i+1 << ") " << curPack[i].getInfo().name;
+    	cout << endl << endl << "(Q) Quit" << endl << endl;
+		int numInput;
+		cin >> numInput;
+		if(numInput=='Q') return true;
+		else numInput--;
+        if(numInput<=int(curPack.size())){
+			ItemStruct item = curPack[numInput].getInfo();
+			cout << item.name << endl
+			     << item.desc << endl
+				 << "Emotion: +" << item.emotion << endl;
+			if(item.moral!=0)
+				cout << "Moral: " << (item.moral>0 ? "+" : "") << item.moral;
+            cout << endl << "(0) Use | (1) Return" << endl;
+			int numInput2;
+			cin >> numInput2;
+			if(numInput2==0){
+				iManager.useItem(numInput,_tempStat);
+				cout << "Used " << item.name << "!" << endl;
+				return true; // Done.
+			}else if(numInput2==1)
+				return false; // Do inventory() again.
+		}
+	} return true;
 }
 
 void RoundUI::shop(){

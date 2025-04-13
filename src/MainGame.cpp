@@ -149,9 +149,9 @@ int main(){
 	cout << "Please enter how " << kidName << " should call you: ";
 	cin >> playerName;
 	for(int rnd=0;rnd<24;rnd++){
-		ui.round(rnd/12,rnd%12);
+		ui.round(rnd/12+1,rnd%12);
 		if(yourKid.getStatus().money < foodMoney) ending(STARVE);
-    	else ui.roundEnd(rnd/12,rnd%12);
+    	else ui.roundEnd(rnd/12+1,rnd%12);
 	}
 	StatStruct end = yourKid.getStatus();
 	int endCode = endCoding(end.moral,end.money,end.favor);

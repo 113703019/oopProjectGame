@@ -19,7 +19,7 @@ class RoundUI{
 		Work* plan(bool jailed);
 		void work(Work* plan);
 		void status();
-		void inventory();
+		bool inventory();
 		void shop();
 };
 
