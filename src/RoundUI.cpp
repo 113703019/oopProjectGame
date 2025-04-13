@@ -191,12 +191,12 @@ Work* RoundUI::plan(bool jailed){
 				if(monthPlan[i].getInfo().name=="Unknown") cout << "(Nothing yet)" << endl;
 				else cout << monthPlan[i].getInfo().name << endl;
 			}
-			cout << endl << endl << "(Q) Quit" << endl << endl;
+			//cout << endl << endl << "(Q) Quit" << endl << endl;
     		cin >> numInput;
-			if(numInput=='Q'){ // Quit
-				monthPlan[2] = Work("Quit",0,0);
-				return monthPlan;
-			} else if(numInput<=int(allWorks.size()))
+			//if(numInput=='Q'){ // Quit
+			//	monthPlan[2] = Work("Quit",0,0);
+			//	return monthPlan;
+			/*} else */if(numInput<=int(allWorks.size()))
 				monthPlan[planOffset++] = Work(allWorks[numInput]);
 		}
 	}
